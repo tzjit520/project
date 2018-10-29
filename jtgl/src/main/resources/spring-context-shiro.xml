@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+    default-lazy-init="true">
+    
+	<description>Shiro 配置</description>
+	
+	<!-- 缓存管理器 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml" />
+    </bean>
+    
+    <!-- 自定义会话侦听器，检测会话过期、终止事件 -->
+	<bean id="sessionListener" class="com.platform.shiro.UserSessionListener">
+		<constructor-arg ref="cacheManager" />
+	</bean>
+	
+    <!-- 会话DAO -->  
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO"/>  
+    
+    <!-- 会话管理器 -->
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<!-- 会话DAO --> 
+		<property name="sessionDAO" ref="sessionDAO"/>
+		<!-- 设置session过期时间为1小时(单位：毫秒)，默认为30分钟 -->
+		<property name="globalSessionTimeout" value="1800000"/>
+        <property name="sessionValidationInterval" value="1800000"/>  
+		<property name ="sessionListeners">
+			<list>
+				<ref bean="sessionListener"/>
+			</list>
+		</property>
+    </bean>
+    
+    <!-- 自定义realm -->
+    <bean id="systemRealm" class="com.platform.shiro.SysRealm">
+        <!-- 将凭证匹配器设置到realm中，realm按照凭证匹配器的要求进行散列 -->
+        <property name="credentialsMatcher">
+        	<!-- 凭证匹配器 -->
+        	<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        		<property name="hashAlgorithmName" value="md5" /><!-- 散列算法 -->
+       			<property name="hashIterations" value="2" /><!-- 散列次数 -->
+        	</bean>
+        </property>
+    </bean>
+  
+    <!-- 定义Shiro安全管理配置 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 启用会话管理器 -->
+        <property name="sessionManager" ref="sessionManager" />
+        <!-- 注入缓存管理器 -->
+        <property name="cacheManager" ref="cacheManager" />
+        <!-- 配置多个Realm -->
+        <property name="realm" ref="systemRealm" />
+        <!-- 记住我 -->
+        <property name="rememberMeManager" ref="rememberMeManager" />
+    </bean>
+    
+    <!-- 自定义AJAX请求过滤 -->
+	<bean id="ajaxAccessFilter" class="com.platform.shiro.AjaxAccessFilter" />
+	
+    <!-- 自定义踢出控制 -->
+	<bean id="kickoutControlFilter" class="com.platform.shiro.KickoutControlFilter">
+		<constructor-arg index="0" ref="sessionDAO" />
+		<constructor-arg index="1" ref="cacheManager" />
+		<property name="kickoutAfter" value="false"/>
+		<property name="maxSession" value="1"/>
+	</bean>
+	
+	<!-- 自定义强制退出 -->
+	<bean id="forceLogoutFilter" class="com.platform.shiro.ForceLogoutFilter" />
+	
+    <!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+    	<!-- Shiro的核心安全接口,这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager" />
+        <!-- 要求登录时的链接(可根据项目的URL进行替换),非必须的属性,默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
+		<!-- ps:检测到未登录(也就是未认证状态时),会被拦截到property中的配置页面 -->
+        <property name="loginUrl" value="/api/v1/access/login" />
+        <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->
+		<!-- anon：不指定过滤器,不错是这个过滤器是空的，什么都没做，跟没有一样 -->
+		<!-- authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter -->
+        <property name="filters">
+            <map>
+                <!-- 将自定义 的FormAuthenticationFilter注入shiroFilter中 -->
+                <!-- <entry key="authc" value-ref="formAuthenticationFilter" /> -->
+                <entry key="ajaxFilter" value-ref="ajaxAccessFilter"/>
+                <entry key="kickout" value-ref="kickoutControlFilter"/>
+                <entry key="forcelogout" value-ref="forceLogoutFilter"/>
+            </map>
+        </property>
+        <!-- Shiro权限过滤过滤器定义 -->
+	    <!-- 过虑器链定义，从上向下顺序执行，一般将/**放在最下边 -->
+	    <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->
+		<!-- anon：可以匿名访问   不指定过滤器,不错是这个过滤器是空的，什么都没做，跟没有一样 -->
+		<!-- authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter -->
+        <property name="filterChainDefinitions">
+            <value>
+                <!-- 静态资源放行 -->
+                /static/** = anon
+                <!-- 对错误页面放行 -->
+                /views/error/** = anon
+                <!-- 登录、验证码，可匿名访问 -->
+				/api/v1/access/login = anon
+				<!-- 验证码 -->
+				/getValidateCode = anon
+                <!-- 配置记住我或认证通过可以访问的地址 -->
+                /welcome.jsp = anon
+                <!-- 请求 logout.action地址，shiro去清除session -->
+                /api/v1/access/logout = logout
+
+                <!-- /** = authc 所有url都必须认证通过才可以访问 -->
+                /** = ajaxFilter,authc,kickout,forcelogout
+            </value>
+        </property>
+    </bean>
+
+    <!-- rememberMeManager管理器，写cookie，取出cookie生成用户信息 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie" />
+    </bean>
+    
+    <!-- 记住我cookie -->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!-- rememberMe是cookie的名字 -->
+        <constructor-arg value="rememberMe" />
+        <!-- 记住我cookie生效时间/秒 -->
+        <property name="maxAge" value="2592000" />
+    </bean>
+ 	
+ 	<!-- Shiro生命周期处理器  可以自定的来调用配置在spring IOC容器中shiro bean的生命周期方法 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    
+    <!-- 启用IOC容器中使用shiro注解，但必须配置了lifecycleBeanPostProcessor之后才可以使用  -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+    	<property name="proxyTargetClass" value="true"/>
+    </bean>
+    
+    <!-- 使service支持shiro权限注解 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+</beans>

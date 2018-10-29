@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.draw.mapper.DrawPrizeMapper">
+
+	<resultMap id="BaseResultMap" type="com.jtgl.draw.model.DrawPrize">
+		<id column="id" jdbcType="INTEGER" property="id" />
+        <result column="draw_id" jdbcType="INTEGER" property="drawId" />
+        <result column="prize_name" jdbcType="VARCHAR" property="prizeName" />
+        <result column="probability" jdbcType="INTEGER" property="probability" />
+        <result column="group_id" jdbcType="INTEGER" property="groupId" />
+        <result column="max_number" jdbcType="INTEGER" property="maxNumber" />
+        <result column="winn_number" jdbcType="INTEGER" property="winnNumber" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="deleted" jdbcType="INTEGER" property="deleted" />
+        <result column="create_by" jdbcType="BIGINT" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <!-- 分组对象 -->
+        <association property="group" javaType="com.jtgl.group.model.Group" >
+			<id property="id" column="group_id" jdbcType="INTEGER"/>
+			<result property="name" column="group_name" jdbcType="VARCHAR"/>
+   		</association>
+   		<!-- 抽奖基础信息对象 -->
+   		<association property="draw" javaType="com.jtgl.draw.model.Draw" >
+			<id property="id" column="draw_id" jdbcType="INTEGER"/>
+			<result property="drawName" column="draw_name" jdbcType="VARCHAR"/>
+   		</association>
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id,
+		draw_id,
+		prize_name,
+		probability,
+		group_id,
+		max_number,
+		winn_number,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		drawPrize.id,
+		drawPrize.draw_id,
+		drawPrize.prize_name,
+		drawPrize.probability,
+		drawPrize.group_id,
+		drawPrize.max_number,
+		drawPrize.winn_number,
+		drawPrize.remark,
+		drawPrize.status,
+		drawPrize.deleted,
+		drawPrize.create_by,
+		drawPrize.create_date,
+		drawPrize.update_by,
+		drawPrize.update_date
+  	</sql>
+  
+  	<sql id="Base_Join_Column_List">
+  		tGroup.id as group_id, tGroup.name as group_name,
+  		draw.id as draw_id, draw.draw_name as draw_name
+  	</sql>
+  	
+  	<sql id="Base_Join_Tables">
+    	left join t_group tGroup on tGroup.id = drawPrize.group_id
+    	left join t_draw draw on draw.id = drawPrize.draw_id
+    </sql>
+    
+ 	<!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" /> 
+   		from 
+   			t_draw_prize drawPrize
+   			<include refid="Base_Join_Tables" /> 
+    	where 
+    		drawPrize.id = #{id, jdbcType=INTEGER}
+  	</select>
+  	
+ 	<!-- 查询奖项对应的奖品信息 -->
+    <select id="selectPrizeItem" parameterType="java.lang.Integer" resultType="java.util.Map">
+    	select 
+    		drawPrize.prize_name as prizeName, item.item_alias as itemName 
+    	from 
+    		t_draw_prize drawPrize 
+			LEFT JOIN t_group tGroup on tGroup.id = drawPrize.group_id
+			LEFT JOIN t_group_privilege privilege on privilege.group_id = tGroup.id
+			LEFT JOIN t_item item on item.id = privilege.item_id 
+		where 
+			drawPrize.deleted = 0 and drawPrize.draw_id = #{drawId}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="com.jtgl.draw.model.DrawPrize" resultMap="BaseResultMap">
+   		select 
+   			<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" /> 	
+		from 
+			t_draw_prize drawPrize
+			<include refid="Base_Join_Tables" /> 
+    	where 
+    		1 = 1 and drawPrize.deleted = 0
+		<if test="drawId != null">
+			AND drawPrize.draw_id = #{drawId}
+		</if>
+  	</select>
+  
+  	<!-- 根据抽奖基础信息ID查询 剩余中奖次数>0 所有奖项信息 -->
+	<select id="queryDrawPrizeList" resultMap="BaseResultMap">
+		select 
+			<include refid="Base_Column_List" />
+		from 
+			t_draw_prize
+		where 
+			status = 1
+			and draw_id = #{drawId,jdbcType=INTEGER}
+			and winn_number > 0
+		order by probability
+	</select>
+	
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="com.jtgl.draw.model.DrawPrize" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" />
+   		from 
+   			t_draw_prize drawPrize
+    	where 
+    		1 = 1 and deleted = 0
+    	<if test="name != null">
+        	AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from t_draw_prize where id = #{id, jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update t_draw_prize set deleted = 1 where id = #{id, jdbcType=INTEGER}
+  	</update>
+  
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="com.jtgl.draw.model.DrawPrize">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_draw_prize (
+			id,
+			draw_id,
+			prize_name,
+			probability,
+			group_id,
+			max_number,
+			winn_number,
+			remark,
+			status,
+			deleted,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		)
+		values (
+			#{id, jdbcType=INTEGER},
+			#{drawId, jdbcType=INTEGER},
+			#{prizeName, jdbcType=VARCHAR},
+			#{probability, jdbcType=INTEGER},
+			#{groupId, jdbcType=INTEGER},
+			#{maxNumber, jdbcType=INTEGER},
+			#{winnNumber, jdbcType=INTEGER},
+			#{remark, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{deleted, jdbcType=INTEGER},
+			#{createBy, jdbcType=BIGINT},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{updateBy, jdbcType=BIGINT},
+			#{updateDate, jdbcType=TIMESTAMP}
+		)
+  	</insert>
+  	
+  	<insert id="insertSelective" parameterType="com.jtgl.draw.model.DrawPrize">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_draw_prize
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="drawId != null">draw_id, </if>
+			<if test="prizeName != null">prize_name, </if>
+			<if test="probability != null">probability, </if>
+			<if test="groupId != null">group_id, </if>
+			<if test="maxNumber != null">max_number, </if>
+			<if test="winnNumber != null">winn_number, </if>
+			<if test="remark != null">remark, </if>
+			<if test="status != null">status, </if>
+			<if test="deleted != null">deleted, </if>
+			<if test="createBy != null">create_by, </if>
+			<if test="createDate != null">create_date, </if>
+			<if test="updateBy != null">update_by, </if>
+			<if test="updateDate != null">update_date, </if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id, jdbcType=INTEGER}, </if>
+			<if test="drawId != null">#{drawId, jdbcType=INTEGER}, </if>
+			<if test="prizeName != null">#{prizeName, jdbcType=VARCHAR}, </if>
+			<if test="probability != null">#{probability, jdbcType=INTEGER}, </if>
+			<if test="groupId != null">#{groupId, jdbcType=INTEGER}, </if>
+			<if test="maxNumber != null">#{maxNumber, jdbcType=INTEGER}, </if>
+			<if test="winnNumber != null">#{winnNumber, jdbcType=INTEGER}, </if>
+			<if test="remark != null">#{remark, jdbcType=VARCHAR}, </if>
+			<if test="status != null">#{status, jdbcType=INTEGER}, </if>
+			<if test="deleted != null">#{deleted, jdbcType=INTEGER}, </if>
+			<if test="createBy != null">#{createBy, jdbcType=BIGINT}, </if>
+			<if test="createDate != null">#{createDate, jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">#{updateBy, jdbcType=BIGINT}, </if>
+			<if test="updateDate != null">#{updateDate, jdbcType=TIMESTAMP}, </if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="com.jtgl.draw.model.DrawPrize">
+    	update t_draw_prize
+		<set>
+        	<if test="drawId != null">draw_id = #{drawId, jdbcType=INTEGER}, </if>
+        	<if test="prizeName != null">prize_name = #{prizeName, jdbcType=VARCHAR}, </if>
+        	<if test="probability != null">probability = #{probability, jdbcType=INTEGER}, </if>
+        	<if test="groupId != null">group_id = #{groupId, jdbcType=INTEGER}, </if>
+        	<if test="maxNumber != null">max_number = #{maxNumber, jdbcType=INTEGER}, </if>
+        	<if test="winnNumber != null">winn_number = #{winnNumber, jdbcType=INTEGER}, </if>
+        	<if test="remark != null">remark = #{remark, jdbcType=VARCHAR}, </if>
+        	<if test="status != null">status = #{status, jdbcType=INTEGER}, </if>
+        	<if test="deleted != null">deleted = #{deleted, jdbcType=INTEGER}, </if>
+        	<if test="createBy != null">create_by = #{createBy, jdbcType=BIGINT}, </if>
+        	<if test="createDate != null">create_date = #{createDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="updateBy != null">update_by = #{updateBy, jdbcType=BIGINT}, </if>
+        	<if test="updateDate != null">update_date = #{updateDate, jdbcType=TIMESTAMP}, </if>
+	    </set>
+    	where id = #{id, jdbcType=INTEGER}
+ 	</update>
+ 	
+  	<update id="updateByPrimaryKey" parameterType="com.jtgl.draw.model.DrawPrize">
+    	update t_draw_prize
+    	<set>
+		    draw_id = #{drawId, jdbcType=INTEGER},
+		    prize_name = #{prizeName, jdbcType=VARCHAR},
+		    probability = #{probability, jdbcType=INTEGER},
+		    group_id = #{groupId, jdbcType=INTEGER},
+		    max_number = #{maxNumber, jdbcType=INTEGER},
+		    winn_number = #{winnNumber, jdbcType=INTEGER},
+		    remark = #{remark, jdbcType=VARCHAR},
+		    status = #{status, jdbcType=INTEGER},
+		    deleted = #{deleted, jdbcType=INTEGER},
+		    create_by = #{createBy, jdbcType=BIGINT},
+		    create_date = #{createDate, jdbcType=TIMESTAMP},
+		    update_by = #{updateBy, jdbcType=BIGINT},
+		    update_date = #{updateDate, jdbcType=TIMESTAMP}
+		</set>
+    	where id = #{id, jdbcType=INTEGER}
+  	</update>
+
+	<!-- 奖项剩余中奖次数-1 -->
+	<update id="updateDrawPrize" parameterType="com.jtgl.draw.model.DrawPrize">
+    	update t_draw_prize set
+        	winn_number = winn_number - 1
+    	where 
+	    	id = #{id,jdbcType=INTEGER}
+    		and winn_number > 0
+	</update>
+	
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	
+	<!-- 防止发生java.beans.Introspector内存泄露,应将它配置在ContextLoaderListener的前面 -->  
+  	<!-- JDK中的java.beans.Introspector类的用途是发现Java类是否符合JavaBean规范  -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	
+	<!-- 实例化Spring容器 -->  
+  	<!-- 应用启动时,该监听器被执行,它会读取Spring相关配置文件,其默认会到WEB-INF中查找applicationContext.xml -->  
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- Spring 的监听器可以通过这个上下文参数来获取beans.xml的位置 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:spring-context.xml
+			classpath:spring-mybatis.xml
+			classpath:spring-context-quartz.xml
+			classpath:spring-context-shiro.xml
+		</param-value>
+	</context-param>
+
+	<!-- 配置Shiro过滤器,先让Shiro过滤系统接收到的请求 -->
+  	<!-- 这里filter-name必须对应applicationContext.xml中定义的<bean id="shiroFilter"/> -->
+  	<!-- 使用[/*]匹配所有请求,保证所有的可控请求都经过Shiro的过滤 -->
+  	<!-- 通常会将此filter-mapping放置到最前面(即其他filter-mapping前面),以保证它是过滤器链中第一个起作用的 -->
+    <filter>  
+        <filter-name>shiroFilter</filter-name>  
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>  
+        <init-param>  
+            <param-name>targetFilterLifecycle</param-name>  
+            <param-value>true</param-value>  
+        </init-param>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>shiroFilter</filter-name>  
+        <url-pattern>/*</url-pattern>   
+    </filter-mapping>
+
+	<!-- 使用Spring MVC,配置DispatcherServlet是第一步。 DispatcherServlet是一个Servlet,所以可以配置多个DispatcherServlet。DispatcherServlet是前置控制器，
+		   配置在web.xml文件中的。拦截匹配的请求，Servlet拦截匹配规则要自已定义，把拦截下来的请求，依据某某规则分发到目标Controller(我们写的Action)来处理  -->
+	<servlet>
+	  	<servlet-name>jtgl</servlet-name>
+	  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	  	<!-- 初始化配置自定义文件夹路径   如果不配置init-param,则springmvc-servlet.xml默认放在WEB-INF下面 -->
+	  	<init-param>
+	  		<param-name>contextConfigLocation</param-name>
+	  		<!-- 启用注解配置 -->
+	  		<param-value>classpath:spring-mvc.xml</param-value>
+	  	</init-param>
+	  	<!-- 1是启动顺序，让这个Servlet随Servletp容器一起启动。  -->
+	  	<load-on-startup>1</load-on-startup>
+	  	<async-supported>true</async-supported>
+	</servlet>
+    <servlet-mapping>
+  		<servlet-name>jtgl</servlet-name>
+  		<!-- 拦截所有请求 -->
+  		<url-pattern>/</url-pattern>
+  	</servlet-mapping>
+
+	<filter>
+	    <filter-name>HiddenHttpMethodFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>HiddenHttpMethodFilter</filter-name>
+	    <!-- 备注，这边的名称必须和配置'springmvc'的servlet名称一样 -->
+	    <servlet-name>jtgl</servlet-name>    
+	</filter-mapping>  
+	
+    <!-- ↓↓↓↓↓编码过滤器↓↓↓↓↓  -->
+  	<filter>
+	    <filter-name>encoding</filter-name>
+	    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	    <init-param>
+	        <param-name>encoding</param-name>
+	        <param-value>UTF-8</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	    <filter-name>encoding</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Druid WebStatFilter配置，用于采集web-jdbc关联监控的数据 -->
+	<filter>
+		<filter-name>DruidWebStatFilter</filter-name>
+		<filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+		<async-supported>true</async-supported>
+		<!-- 经常需要排除一些不必要的url，比如.js,/jslib/等等。配置在init-param中 -->
+		<init-param>
+			<param-name>exclusions</param-name>
+			<param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/assets/*</param-value>
+		</init-param>
+		<!-- 缺省sessionStatMaxCount是1000个。你可以按需要进行配置  -->
+		<init-param>
+			<param-name>sessionStatMaxCount</param-name>
+			<param-value>1000</param-value>
+		</init-param>
+		<!-- 关闭session统计功能  -->
+		<init-param>
+			<param-name>sessionStatEnable</param-name>
+			<param-value>false</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>DruidWebStatFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Druid监控页面 -->
+	<servlet>
+		<servlet-name>DruidStatView</servlet-name>
+		<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+		<init-param>
+			<!-- 允许清空统计数据 -->
+			<param-name>resetenable</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!--
+		<init-param>
+			<param-name>loginUsername</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>loginPassword</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		-->
+		<async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DruidStatView</servlet-name>
+		<url-pattern>/druid/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 欢迎页面定义 -->
+	<welcome-file-list>
+		<welcome-file>/WEB-INF/welcome.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!-- session超时定义,单位为分钟 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+</web-app>

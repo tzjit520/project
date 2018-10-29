@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	
+	<!-- 开启注解模式驱动 --> 
+    <mvc:annotation-driven/>
+
+	<!-- 打开使用注解自动检测功能自动注册Bean，只扫描@Controller  base-package 如果多个，用“,”分隔   -->
+	<context:component-scan base-package="com.jtgl,com.platform" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<context:property-placeholder ignore-unresolvable="false" location="classpath:system-config.properties" />
+
+	<!-- 开启shiro注解支持 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+
+	<!-- Kaptcha验证码配置  -->
+	<bean id="kaptchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">  
+        <property name="config">  
+            <bean class="com.google.code.kaptcha.util.Config">  
+                <constructor-arg>  
+                    <props>  
+                    	<!-- 是否有边框  默认为true  我们可以自己设置yes，no -->
+                        <prop key="kaptcha.border">${kaptcha.border}</prop>
+                        <!-- 验证码图片宽度  默认为200 --> 
+                        <prop key="kaptcha.image.width">${kaptcha.image.width}</prop>  
+                        <!-- 验证码图片高度  默认为50 --> 
+                        <prop key="kaptcha.image.height">${kaptcha.image.height}</prop>  
+                        <!-- 验证码文本字符大小  默认为40 --> 
+                        <prop key="kaptcha.textproducer.font.size">${kaptcha.font.size}</prop>  
+                        <!-- 保存到session的key --> 
+                        <prop key="kaptcha.session.key">${kaptcha.key}</prop>  
+                        <!-- 验证码文本字符长度  默认为5 --> 
+                        <prop key="kaptcha.textproducer.char.length">${kaptcha.length}</prop>  
+                        <!-- 验证码文本字体样式   --> 
+                        <prop key="kaptcha.textproducer.font.names">${kaptcha.font.names}</prop>  
+                    </props>   
+                </constructor-arg>  
+            </bean>  
+        </property>  
+    </bean>
+    
+	<!-- 静态资源过滤 -->
+    <mvc:resources location="/static/" mapping="/static/**"/>
+    <mvc:resources location="/uploads/" mapping="/uploads/**"/>
+         
+	<!-- 配置视图解析器 如何把handler 方法返回值解析为实际的物理视图 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name = "prefix" value="/WEB-INF/views/"></property>
+		<property name = "suffix" value = ".jsp"></property>
+	</bean>
+
+	<!-- 文件上传表单的视图解析器 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding"><value>${defaultEncoding}</value></property>   
+        <property name="maxUploadSize"><value>${maxUploadSize}</value></property>
+        <property name="maxInMemorySize"><value>${maxInMemorySize}</value></property> 
+    </bean>
+    
+    <!-- 处理shiro 404 session丢失的问题 -->
+    <bean id="defaultController" class="com.platform.controller.DefaultController" />
+    <bean id="defaulturlmapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="order" value="2147483647" /><!-- 此处的order很重要，要低于 mvc:resources的默认值2147483646-->
+        <property name="mappings">
+            <props>
+                <prop key="/*/**">defaultController</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

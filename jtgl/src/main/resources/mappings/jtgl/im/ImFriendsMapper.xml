@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.im.mapper.ImFriendsMapper">
+
+	<resultMap id="BaseResultMap" type="com.jtgl.im.model.ImFriends">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="friend_id" jdbcType="BIGINT" property="friendId" />
+		<result column="user_id" jdbcType="BIGINT" property="userId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="friend_type_id" jdbcType="BIGINT" property="friendTypeId" />
+		<result column="friend_group_id" jdbcType="BIGINT" property="friendGroupId" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="deleted" jdbcType="INTEGER" property="deleted" />
+		<result column="create_by" jdbcType="BIGINT" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="update_by" jdbcType="BIGINT" property="updateBy" />
+		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,
+		friend_id,
+		user_id,
+		name,
+		friend_type_id,
+		friend_group_id,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+	</sql>
+
+	<sql id="Base_Column_List_Alias">
+		imFriends.id,
+		imFriends.friend_id,
+		imFriends.user_id,
+		imFriends.name,
+		imFriends.friend_type_id,
+		imFriends.friend_group_id,
+		imFriends.remark,
+		imFriends.status,
+		imFriends.deleted,
+		imFriends.create_by,
+		imFriends.create_date,
+		imFriends.update_by,
+		imFriends.update_date
+	</sql>
+
+	<!-- 根据主键查询记录 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from im_t_friends
+		where id = #{id, jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据条件查询记录 TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整 -->
+	<select id="selectByProperties" parameterType="com.jtgl.im.model.ImFriends"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List_Alias" />
+		from im_t_friends imFriends
+		where 1=1 and imFriends.deleted = 0
+		<if test="name != null">
+			AND imFriends.name like CONCAT('%',#{name},'%')
+		</if>
+	</select>
+
+	<!-- 检查数据唯一性 TODO 此处条件固定写为根据name判断，需根据实际情况进行调整 -->
+	<select id="selectByUnique" parameterType="com.jtgl.im.model.ImFriends"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from im_t_friends imFriends
+		where 1=1 and deleted = 0
+		<if test="name != null">
+			AND name = #{name}
+		</if>
+	</select>
+
+	<!-- 删除数据，物理删除和逻辑删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from im_t_friends where id = #{id, jdbcType=INTEGER}
+	</delete>
+	
+	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+		update im_t_friends set deleted = 1 where id = #{id, jdbcType=INTEGER}
+	</update>
+
+	<!-- 保存数据 -->
+	<insert id="insert" parameterType="com.jtgl.im.model.ImFriends">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into im_t_friends (
+		id,
+		friend_id,
+		user_id,
+		name,
+		friend_type_id,
+		friend_group_id,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+		)
+		values (
+		#{id, jdbcType=BIGINT},
+		#{friendId, jdbcType=BIGINT},
+		#{userId, jdbcType=BIGINT},
+		#{name, jdbcType=VARCHAR},
+		#{friendTypeId, jdbcType=BIGINT},
+		#{friendGroupId, jdbcType=BIGINT},
+		#{remark, jdbcType=VARCHAR},
+		#{status, jdbcType=INTEGER},
+		#{deleted, jdbcType=INTEGER},
+		#{createBy, jdbcType=BIGINT},
+		#{createDate, jdbcType=TIMESTAMP},
+		#{updateBy, jdbcType=BIGINT},
+		#{updateDate, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.jtgl.im.model.ImFriends">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into im_t_friends
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="friendId != null">friend_id, </if>
+			<if test="userId != null">user_id, </if>
+			<if test="name != null">name, </if>
+			<if test="friendTypeId != null">friend_type_id, </if>
+			<if test="friendGroupId != null">friend_group_id, </if>
+			<if test="remark != null">remark, </if>
+			<if test="status != null">status, </if>
+			<if test="deleted != null">deleted, </if>
+			<if test="createBy != null">create_by, </if>
+			<if test="createDate != null">create_date, </if>
+			<if test="updateBy != null">update_by, </if>
+			<if test="updateDate != null">update_date, </if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id, jdbcType=BIGINT}, </if>
+			<if test="friendId != null">#{friendId, jdbcType=BIGINT}, </if>
+			<if test="userId != null">#{userId, jdbcType=BIGINT}, </if>
+			<if test="name != null">#{name, jdbcType=VARCHAR}, </if>
+			<if test="friendTypeId != null">#{friendTypeId, jdbcType=BIGINT}, </if>
+			<if test="friendGroupId != null">#{friendGroupId, jdbcType=BIGINT}, </if>
+			<if test="remark != null">#{remark, jdbcType=VARCHAR}, </if>
+			<if test="status != null">#{status, jdbcType=INTEGER}, </if>
+			<if test="deleted != null">#{deleted, jdbcType=INTEGER}, </if>
+			<if test="createBy != null">#{createBy, jdbcType=BIGINT}, </if>
+			<if test="createDate != null">#{createDate, jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">#{updateBy, jdbcType=BIGINT}, </if>
+			<if test="updateDate != null">#{updateDate, jdbcType=TIMESTAMP}, </if>
+		</trim>
+	</insert>
+
+	<!-- 更新数据 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jtgl.im.model.ImFriends">
+		update im_t_friends
+		<set>
+			<if test="friendId != null">friend_id = #{friendId, jdbcType=BIGINT}, </if>
+			<if test="userId != null">user_id = #{userId, jdbcType=BIGINT}, </if>
+			<if test="name != null">name = #{name, jdbcType=VARCHAR}, </if>
+			<if test="friendTypeId != null">friend_type_id = #{friendTypeId, jdbcType=BIGINT}, </if>
+			<if test="friendGroupId != null">friend_group_id = #{friendGroupId, jdbcType=BIGINT}, </if>
+			<if test="remark != null">remark = #{remark, jdbcType=VARCHAR}, </if>
+			<if test="status != null">status = #{status, jdbcType=INTEGER}, </if>
+			<if test="deleted != null">deleted = #{deleted, jdbcType=INTEGER}, </if>
+			<if test="createBy != null">create_by = #{createBy, jdbcType=BIGINT}, </if>
+			<if test="createDate != null">create_date = #{createDate, jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">update_by = #{updateBy, jdbcType=BIGINT}, </if>
+			<if test="updateDate != null">update_date = #{updateDate, jdbcType=TIMESTAMP}, </if>
+		</set>
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="com.jtgl.im.model.ImFriends">
+		update im_t_friends
+		<set>
+
+			friend_id = #{friendId, jdbcType=BIGINT},
+			user_id = #{userId, jdbcType=BIGINT},
+			name = #{name, jdbcType=VARCHAR},
+			friend_type_id = #{friendTypeId, jdbcType=BIGINT},
+			friend_group_id = #{friendGroupId, jdbcType=BIGINT},
+			remark = #{remark, jdbcType=VARCHAR},
+			status = #{status, jdbcType=INTEGER},
+			deleted = #{deleted, jdbcType=INTEGER},
+			create_by = #{createBy, jdbcType=BIGINT},
+			create_date = #{createDate, jdbcType=TIMESTAMP},
+			update_by = #{updateBy, jdbcType=BIGINT},
+			update_date = #{updateDate, jdbcType=TIMESTAMP}
+		</set>
+		where id = #{id, jdbcType=INTEGER}
+	</update>
+
+</mapper>

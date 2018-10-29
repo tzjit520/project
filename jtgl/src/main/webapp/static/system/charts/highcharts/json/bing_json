@@ -1,0 +1,52 @@
+{
+    "rows3": [
+        {
+            "resourceId": 1021820091148,
+            "tId": "2017-01-25 14:15:00",
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "rows4": [
+        {
+            "resourceId": 1021134803014,
+            "tId": "2017-01-25 14:15:00",
+            "mw": 0.07437515,
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "rows1": [
+        {
+            "resourceId": 1022077824682,
+            "tId": "2017-01-25 14:15:00",
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "rows2": [
+        {
+            "resourceId": 1022042824137,
+            "tId": "2017-01-25 14:15:00",
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "rows5": [
+        {
+            "resourceId": 1021164921271,
+            "tId": "2017-01-25 14:15:00",
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "rows6": [
+        {
+            "resourceId": 1021428469450,
+            "tId": "2017-01-25 14:15:00",
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "dateStr": "2017-01-25 14:15"
+}

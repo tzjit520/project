@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.system.operation.mapper.SysOperationMapper">
+
+  <resultMap id="BaseResultMap" type="com.platform.system.operation.model.SysOperation">
+    <id column="id" javaType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
+    
+    <result column="create_by" javaType="INTEGER" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" javaType="INTEGER" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, name, code, remark, status, deleted, create_by, create_date, update_by, update_date
+  </sql>
+  
+  <sql id="Base_Column_List_Alias">
+    operation.id, operation.name, operation.code, operation.remark, operation.status, operation.deleted, 
+    operation.create_by, operation.create_date, operation.update_by, operation.update_date
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_t_operation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByProperties" parameterType="com.platform.system.operation.model.SysOperation" resultMap="BaseResultMap">
+   	select  
+   		<include refid="Base_Column_List_Alias" />
+    from 
+    	sys_t_operation operation
+    where 1 = 1 and operation.deleted = 0
+   	<if test="name != null">
+		AND operation.name like CONCAT('%',#{name},'%' )
+	</if>
+	<if test="code != null">
+		AND operation.code like CONCAT('%',#{code},'%' )
+	</if>
+    <if test="resourceId != null">
+        AND ur.resource_id = #{resourceId,jdbcType=INTEGER}
+    </if>
+	order by operation.create_date desc
+  </select>
+  
+  <!-- 查询操作是否被引用 -->
+  <select id="selectPermissionCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select COUNT(p.id) 
+    from sys_t_operation o 
+    LEFT JOIN sys_t_permission p 
+    on o.id = p.operation_id 
+    where o.id = #{operationId,jdbcType=INTEGER} and p.deleted = 0
+  </select>
+  
+  <select id="selectByUnique" parameterType="com.platform.system.operation.model.SysOperation" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from sys_t_operation
+    where 1=1 and deleted = 0
+    <if test="name != null">
+        AND name = #{name}
+    </if>
+    <if test="code != null">
+        AND code = #{code}
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_t_operation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+    update sys_t_operation set deleted = 1
+    where id = #{id,jdbcType=INTEGER}
+  </delete>  
+  
+  <insert id="insert" parameterType="com.platform.system.operation.model.SysOperation">
+  	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_t_operation (id, name, code, 
+      remark, status, deleted, create_by, 
+      create_date, update_by, update_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.platform.system.operation.model.SysOperation">
+  	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_t_operation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.platform.system.operation.model.SysOperation">
+    update sys_t_operation
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.platform.system.operation.model.SysOperation">
+    update sys_t_operation
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      deleted = #{deleted,jdbcType=INTEGER},
+      create_by = #{createBy,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

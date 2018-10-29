@@ -1,0 +1,1192 @@
+{
+    "rows1": [
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485187200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485188100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485189000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485189900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485190800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485191700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485192600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485193500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485194400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485195300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485196200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485197100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485198000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485198900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485199800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485200700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485201600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485202500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485203400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485204300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485205200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485206100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485207000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485207900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485208800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485209700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485210600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485211500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485212400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485213300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485214200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485215100000",
+            "mw": 5.092501,
+            "mx": 5.928125,
+            "i": 742.25,
+            "kv": 135.525,
+            "hz": 50.002,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485216000000",
+            "mw": 52.815,
+            "mx": 12.425,
+            "i": 960.25,
+            "kv": 181.2375,
+            "hz": 49.977,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485216900000",
+            "mw": 50.37813,
+            "mx": 13.46625,
+            "i": 959.875,
+            "kv": 184.875,
+            "hz": 50.00625,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485217800000",
+            "mw": 50.785,
+            "mx": 14.67375,
+            "i": 977.5,
+            "kv": 190.8,
+            "hz": 50.0265,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485218700000",
+            "mw": 50.6275,
+            "mx": 15.4875,
+            "i": 987.125,
+            "kv": 195.15,
+            "hz": 50.03387,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485219600000",
+            "mw": 50.90312,
+            "mx": 15.93375,
+            "i": 995.25,
+            "kv": 197.325,
+            "hz": 50.03513,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485220500000",
+            "mw": 50.48312,
+            "mx": 16.29688,
+            "i": 995.625,
+            "kv": 198.4125,
+            "hz": 50.0075,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485221400000",
+            "mw": 50.365,
+            "mx": 16.31,
+            "i": 996.75,
+            "kv": 199.65,
+            "hz": 50.01,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485222300000",
+            "mw": 50.86375,
+            "mx": 16.09563,
+            "i": 1000.75,
+            "kv": 200.475,
+            "hz": 49.97837,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485223200000",
+            "mw": 50.9775,
+            "mx": 15.85938,
+            "i": 995.5,
+            "kv": 200.2125,
+            "hz": 50.0185,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485224100000",
+            "mw": 51.06062,
+            "mx": 15.75,
+            "i": 995,
+            "kv": 200.4375,
+            "hz": 50.01913,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485225000000",
+            "mw": 51.17438,
+            "mx": 16.07375,
+            "i": 999.25,
+            "kv": 201.3,
+            "hz": 50.02625,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485225900000",
+            "mw": 50.81563,
+            "mx": 15.92062,
+            "i": 999.25,
+            "kv": 201.225,
+            "hz": 49.97763,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485226800000",
+            "mw": 50.8025,
+            "mx": 14.5425,
+            "i": 986.5,
+            "kv": 199.3875,
+            "hz": 49.95687,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485227700000",
+            "mw": 50.76312,
+            "mx": 13.93,
+            "i": 980,
+            "kv": 197.7,
+            "hz": 49.99275,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485228600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485229500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485230400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485231300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485232200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485233100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485234000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485234900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485235800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485236700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485237600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485238500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485239400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485240300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485241200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485242100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485243000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485243900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485244800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485245700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485246600000",
+            "mw": 11.13437,
+            "mx": 5.656876,
+            "i": 754.875,
+            "kv": 139.275,
+            "hz": 50.03563,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485247500000",
+            "mw": 49.76125,
+            "mx": 8.623125,
+            "i": 915.5,
+            "kv": 174.225,
+            "hz": 50.02775,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485248400000",
+            "mw": 49.60375,
+            "mx": 7.511875,
+            "i": 904.875,
+            "kv": 173.5125,
+            "hz": 49.99588,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485249300000",
+            "mw": 51.53313,
+            "mx": 7.11375,
+            "i": 913.125,
+            "kv": 178.2375,
+            "hz": 49.9875,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485250200000",
+            "mw": 50.17687,
+            "mx": 7.76125,
+            "i": 910.5,
+            "kv": 178.275,
+            "hz": 50.03375,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485251100000",
+            "mw": 51.13062,
+            "mx": 8.60125,
+            "i": 923.375,
+            "kv": 181.3875,
+            "hz": 50.04113,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485252000000",
+            "mw": 50.62312,
+            "mx": 8.53125,
+            "i": 923.125,
+            "kv": 182.0625,
+            "hz": 49.97813,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485252900000",
+            "mw": 50.32125,
+            "mx": 8.7675,
+            "i": 924.5,
+            "kv": 182.85,
+            "hz": 50.03262,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485253800000",
+            "mw": 50.71062,
+            "mx": 8.771875,
+            "i": 927.75,
+            "kv": 183.675,
+            "hz": 49.97937,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485254700000",
+            "mw": 51.03438,
+            "mx": 8.715,
+            "i": 929.5,
+            "kv": 184.3125,
+            "hz": 50.018,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485255600000",
+            "mw": 50.61,
+            "mx": 8.999374,
+            "i": 928.75,
+            "kv": 184.8375,
+            "hz": 50.03738,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485256500000",
+            "mw": 51.14375,
+            "mx": 9.37125,
+            "i": 934.625,
+            "kv": 186.3,
+            "hz": 49.96725,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485257400000",
+            "mw": 50.59688,
+            "mx": 9.226875,
+            "i": 931.5,
+            "kv": 184.95,
+            "hz": 50.02887,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485258300000",
+            "mw": 50.68875,
+            "mx": 9.45875,
+            "i": 937.125,
+            "kv": 186,
+            "hz": 49.9635,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485259200000",
+            "mw": 50.40437,
+            "mx": 9.31875,
+            "i": 932.5,
+            "kv": 186.0375,
+            "hz": 50.02412,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485260100000",
+            "mw": 50.575,
+            "mx": 9.309999,
+            "i": 932.875,
+            "kv": 186.1125,
+            "hz": 50.01513,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485261000000",
+            "mw": 50.29063,
+            "mx": 9.178751,
+            "i": 928.125,
+            "kv": 185.7,
+            "hz": 50.01138,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485261900000",
+            "mw": 50.12875,
+            "i": 928.375,
+            "kv": 185.2125,
+            "hz": 49.99913,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485262800000",
+            "mw": 50.09812,
+            "mx": 9.161249,
+            "i": 928,
+            "kv": 184.425,
+            "hz": 49.966,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485263700000",
+            "mw": 50.3825,
+            "mx": 9.178751,
+            "i": 928,
+            "kv": 186.225,
+            "hz": 49.95863,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485264600000",
+            "mw": 49.83125,
+            "mx": 10.29875,
+            "i": 936,
+            "kv": 187.3875,
+            "hz": 49.99775,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485265500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485266400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485267300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485268200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485269100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485270000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485270900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485271800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485272700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "rows2": [
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485187200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485188100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485189000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485189900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485190800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485191700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485192600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485193500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485194400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485195300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485196200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485197100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485198000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485198900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485199800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485200700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485201600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485202500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485203400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485204300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485205200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485206100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485207000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485207900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485208800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485209700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485210600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485211500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485212400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485213300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485214200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485215100000",
+            "mw": 0.03937531,
+            "mx": 1.255625,
+            "i": 690.375,
+            "kv": 126,
+            "hz": 50.03038,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485216000000",
+            "mw": 49.875,
+            "mx": 10.6225,
+            "i": 930.625,
+            "kv": 173.7375,
+            "hz": 49.98687,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485216900000",
+            "mw": 50.575,
+            "mx": 12.16688,
+            "i": 952,
+            "kv": 182.7,
+            "hz": 49.9655,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485217800000",
+            "mw": 50.8375,
+            "mx": 12.6875,
+            "i": 958.25,
+            "kv": 185.1375,
+            "hz": 49.96537,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485218700000",
+            "mw": 50.82875,
+            "mx": 13.87313,
+            "i": 973.625,
+            "kv": 190.4625,
+            "hz": 49.99987,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485219600000",
+            "mw": 51.135,
+            "mx": 14.52063,
+            "i": 983.75,
+            "kv": 194.0625,
+            "hz": 50.02962,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485220500000",
+            "mw": 51.12187,
+            "mx": 14.81375,
+            "i": 988.375,
+            "kv": 196.275,
+            "hz": 50.03712,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485221400000",
+            "mw": 50.8725,
+            "mx": 14.665,
+            "i": 985.625,
+            "kv": 196.05,
+            "hz": 50.038,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485222300000",
+            "mw": 51.73875,
+            "mx": 15.22063,
+            "i": 994.625,
+            "kv": 198.525,
+            "hz": 50.01125,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485223200000",
+            "mw": 51.58562,
+            "mx": 16.6075,
+            "i": 1006.625,
+            "kv": 202.5375,
+            "hz": 50.015,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485224100000",
+            "mw": 51.25313,
+            "mx": 16.59438,
+            "i": 1005,
+            "kv": 202.425,
+            "hz": 49.9985,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485225000000",
+            "mw": 51.1175,
+            "mx": 15.81562,
+            "i": 996.125,
+            "kv": 199.9125,
+            "hz": 50.02913,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485225900000",
+            "i": 1003.625,
+            "hz": 49.95813,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485226800000",
+            "mw": 50.1725,
+            "mx": 15.99937,
+            "i": 996.125,
+            "kv": 200.5125,
+            "hz": 49.9965,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485227700000",
+            "mw": 50.785,
+            "mx": 17.14125,
+            "i": 1011.75,
+            "kv": 203.7375,
+            "hz": 50.00025,
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485228600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485229500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485230400000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485231300000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485232200000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485233100000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485234000000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485234900000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485235800000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485236700000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485237600000",
+            "delFlag": "0",
+            "isNewRecord": false
+        },
+        {
+            "resourceId": 1021820091148,
+            "tId": "1485238500000",
+            "delFlag": "0",
+            "isNewRecord": false
+        }
+    ],
+    "maxGs": {
+        "resourceId": 1021820091148,
+        "tId": "1485227700000",
+        "mw": 50.785,
+        "mx": 17.14125,
+        "i": 1011.75,
+        "kv": 203.7375,
+        "hz": 50.00025,
+        "delFlag": "0",
+        "isNewRecord": false
+    }
+}

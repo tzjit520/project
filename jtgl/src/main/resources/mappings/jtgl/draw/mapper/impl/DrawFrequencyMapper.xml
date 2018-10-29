@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.draw.mapper.DrawFrequencyMapper">
+
+	<resultMap id="BaseResultMap" type="com.jtgl.draw.model.DrawFrequency">
+		<id column="id" jdbcType="INTEGER" property="id" />
+        <result column="draw_id" jdbcType="INTEGER" property="drawId" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="remain_number" jdbcType="INTEGER" property="remainNumber" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="deleted" jdbcType="INTEGER" property="deleted" />
+        <result column="create_by" jdbcType="BIGINT" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        <!-- 用户对象 -->
+        <association property="user" javaType="com.platform.system.user.model.SysUser" >
+			<id property="id" column="user_id" jdbcType="INTEGER"/>
+			<result property="code" column="user_code" jdbcType="VARCHAR"/>
+			<result property="name" column="user_name" jdbcType="VARCHAR"/>
+   		</association>
+   		<!-- 抽奖基础信息对象 -->
+   		<association property="draw" javaType="com.jtgl.draw.model.Draw" >
+			<id property="id" column="draw_id" jdbcType="INTEGER"/>
+			<result property="drawName" column="draw_name" jdbcType="VARCHAR"/>
+   		</association>
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id,
+		draw_id,
+		user_id,
+		remain_number,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		drawFrequency.id,
+		drawFrequency.draw_id,
+		drawFrequency.user_id,
+		drawFrequency.remain_number,
+		drawFrequency.remark,
+		drawFrequency.status,
+		drawFrequency.deleted,
+		drawFrequency.create_by,
+		drawFrequency.create_date,
+		drawFrequency.update_by,
+		drawFrequency.update_date
+  	</sql>
+  
+  	<sql id="Base_Join_Column_List">
+  		user.id as user_id, user.code as user_code, user.name as user_name,
+  		draw.id as draw_id, draw.draw_name as draw_name
+  	</sql>
+  	
+  	<sql id="Base_Join_Tables">
+    	left join sys_t_user user on user.id = drawFrequency.user_id
+    	left join t_draw draw on draw.id = drawFrequency.draw_id
+    </sql>
+    
+ 	<!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" /> 
+    	from 
+    		t_draw_frequency drawFrequency
+    		<include refid="Base_Join_Tables" /> 
+    	where 
+    		drawFrequency.id = #{id, jdbcType=INTEGER}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="com.jtgl.draw.model.DrawFrequency" resultMap="BaseResultMap">
+   		select 
+    		<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" /> 
+    	from 
+    		t_draw_frequency drawFrequency
+    		<include refid="Base_Join_Tables" /> 
+    	where 
+    		1 = 1 and drawFrequency.deleted = 0
+		<if test="drawId != null">
+			AND drawFrequency.draw_id = #{drawId}
+		</if>
+		<if test="userId != null">
+			AND drawFrequency.user_id = #{userId}
+		</if>
+  	</select>
+  
+  	<!-- 根据抽奖基础信息Id和用户ID查询抽奖次数 -->
+	<select id="queryDrawFrequency" resultMap="BaseResultMap">
+		select 
+			<include refid="Base_Column_List" />
+		from 
+			t_draw_frequency
+		where 
+        	draw_id = #{drawId,jdbcType=INTEGER}
+			and user_id = #{userId,jdbcType=INTEGER}
+	</select>
+	
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="com.jtgl.draw.model.DrawFrequency" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" />
+   		from 
+   			t_draw_frequency
+    	where 
+    		1 = 1 and deleted = 0
+    	<if test="name != null">
+        	AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from t_draw_frequency where id = #{id, jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update t_draw_frequency set deleted = 1 where id = #{id, jdbcType=INTEGER}
+  	</update>
+  
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="com.jtgl.draw.model.DrawFrequency">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_draw_frequency (
+			id,
+			draw_id,
+			user_id,
+			remain_number,
+			remark,
+			status,
+			deleted,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		)
+		values (
+			#{id, jdbcType=INTEGER},
+			#{drawId, jdbcType=INTEGER},
+			#{userId, jdbcType=INTEGER},
+			#{remainNumber, jdbcType=INTEGER},
+			#{remark, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{deleted, jdbcType=INTEGER},
+			#{createBy, jdbcType=BIGINT},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{updateBy, jdbcType=BIGINT},
+			#{updateDate, jdbcType=TIMESTAMP}
+		)
+  	</insert>
+  	
+  	<insert id="insertSelective" parameterType="com.jtgl.draw.model.DrawFrequency">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_draw_frequency
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="drawId != null">draw_id, </if>
+			<if test="userId != null">user_id, </if>
+			<if test="remainNumber != null">remain_number, </if>
+			<if test="remark != null">remark, </if>
+			<if test="status != null">status, </if>
+			<if test="deleted != null">deleted, </if>
+			<if test="createBy != null">create_by, </if>
+			<if test="createDate != null">create_date, </if>
+			<if test="updateBy != null">update_by, </if>
+			<if test="updateDate != null">update_date, </if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id, jdbcType=INTEGER}, </if>
+			<if test="drawId != null">#{drawId, jdbcType=INTEGER}, </if>
+			<if test="userId != null">#{userId, jdbcType=INTEGER}, </if>
+			<if test="remainNumber != null">#{remainNumber, jdbcType=INTEGER}, </if>
+			<if test="remark != null">#{remark, jdbcType=VARCHAR}, </if>
+			<if test="status != null">#{status, jdbcType=INTEGER}, </if>
+			<if test="deleted != null">#{deleted, jdbcType=INTEGER}, </if>
+			<if test="createBy != null">#{createBy, jdbcType=BIGINT}, </if>
+			<if test="createDate != null">#{createDate, jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">#{updateBy, jdbcType=BIGINT}, </if>
+			<if test="updateDate != null">#{updateDate, jdbcType=TIMESTAMP}, </if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="com.jtgl.draw.model.DrawFrequency">
+    	update t_draw_frequency
+		<set>
+        	<if test="drawId != null">draw_id = #{drawId, jdbcType=INTEGER}, </if>
+        	<if test="userId != null">user_id = #{userId, jdbcType=INTEGER}, </if>
+        	<if test="remainNumber != null">remain_number = #{remainNumber, jdbcType=INTEGER}, </if>
+        	<if test="remark != null">remark = #{remark, jdbcType=VARCHAR}, </if>
+        	<if test="status != null">status = #{status, jdbcType=INTEGER}, </if>
+        	<if test="deleted != null">deleted = #{deleted, jdbcType=INTEGER}, </if>
+        	<if test="createBy != null">create_by = #{createBy, jdbcType=BIGINT}, </if>
+        	<if test="createDate != null">create_date = #{createDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="updateBy != null">update_by = #{updateBy, jdbcType=BIGINT}, </if>
+        	<if test="updateDate != null">update_date = #{updateDate, jdbcType=TIMESTAMP}, </if>
+	    </set>
+    	where id = #{id, jdbcType=INTEGER}
+ 	</update>
+ 	
+  	<update id="updateByPrimaryKey" parameterType="com.jtgl.draw.model.DrawFrequency">
+    	update t_draw_frequency
+    	<set>
+		    draw_id = #{drawId, jdbcType=INTEGER},
+		    user_id = #{userId, jdbcType=INTEGER},
+		    remain_number = #{remainNumber, jdbcType=INTEGER},
+		    remark = #{remark, jdbcType=VARCHAR},
+		    status = #{status, jdbcType=INTEGER},
+		    deleted = #{deleted, jdbcType=INTEGER},
+		    create_by = #{createBy, jdbcType=BIGINT},
+		    create_date = #{createDate, jdbcType=TIMESTAMP},
+		    update_by = #{updateBy, jdbcType=BIGINT},
+		    update_date = #{updateDate, jdbcType=TIMESTAMP}
+		</set>
+    	where id = #{id, jdbcType=INTEGER}
+  </update>
+
+	<!-- 抽奖次数-1 -->
+	<update id="updateLuckyDraw" parameterType="com.jtgl.draw.model.DrawFrequency">
+    	update t_draw_frequency set
+        	remain_number = remain_number - 1
+    	where 
+	    	draw_id = #{drawId,jdbcType=INTEGER} 
+	    	and user_id = #{userId,jdbcType=INTEGER}
+    		and remain_number > 0
+	</update>
+</mapper>

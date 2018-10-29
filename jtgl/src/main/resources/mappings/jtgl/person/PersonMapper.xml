@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.person.mapper.PersonMapper">
+
+	<resultMap id="BaseResultMap" type="com.jtgl.person.model.Person">
+		<id column="id" jdbcType="INTEGER" property="id" />
+        <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+        <result column="number" jdbcType="VARCHAR" property="number" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="age" jdbcType="INTEGER" property="age" />
+        <result column="identification" jdbcType="VARCHAR" property="identification" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="emergency_contact_phone" jdbcType="VARCHAR" property="emergencyContactPhone" />
+        <result column="qq" jdbcType="VARCHAR" property="qq" />
+        <result column="weixin" jdbcType="VARCHAR" property="weixin" />
+        <result column="mail" jdbcType="VARCHAR" property="mail" />
+        <result column="height" jdbcType="FLOAT" property="height" />
+        <result column="weight" jdbcType="FLOAT" property="weight" />
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="county" jdbcType="VARCHAR" property="county" />
+        <result column="map_x" jdbcType="VARCHAR" property="mapX" />
+        <result column="map_y" jdbcType="VARCHAR" property="mapY" />
+        <result column="nation" jdbcType="VARCHAR" property="nation" />
+        <result column="zodiac" jdbcType="VARCHAR" property="zodiac" />
+        <result column="constellations" jdbcType="VARCHAR" property="constellations" />
+        <result column="blood_type" jdbcType="VARCHAR" property="bloodType" />
+        <result column="education_background" jdbcType="VARCHAR" property="educationBackground" />
+        <result column="graduate_institution" jdbcType="VARCHAR" property="graduateInstitution" />
+        <result column="profession" jdbcType="VARCHAR" property="profession" />
+        <result column="position" jdbcType="VARCHAR" property="position" />
+        <result column="education_experience" jdbcType="VARCHAR" property="educationExperience" />
+        <result column="education_years" jdbcType="INTEGER" property="educationYears" />
+        <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus" />
+        <result column="registered_address" jdbcType="VARCHAR" property="registeredAddress" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="hobbies_interests" jdbcType="VARCHAR" property="hobbiesInterests" />
+        <result column="dream" jdbcType="VARCHAR" property="dream" />
+        <result column="photo" jdbcType="VARCHAR" property="photo" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="deleted" jdbcType="INTEGER" property="deleted" />
+        <result column="create_by" jdbcType="INTEGER" property="createBy" />
+	    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+	    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+	    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+	    
+	    <result column="child_count" jdbcType="INTEGER" property="childCount" />
+	    <association property="parentPerson"  column="parent_id" javaType="com.jtgl.person.model.Person" >
+   			<id property="id" column="parent_person_id" jdbcType="INTEGER" />  
+            <result property="name" column="parent_person_name" jdbcType="VARCHAR"/>  
+    	</association>
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id, parent_id, number, name, short_name, sex, age, identification, phone, emergency_contact_phone, qq, weixin,
+		province, city, county, map_x, map_y, mail, height, weight, birthday, nation, zodiac, constellations, blood_type, education_background, 
+		graduate_institution, profession, position, education_experience, education_years, marital_status, registered_address,
+		address, remark, hobbies_interests, dream, photo, status, deleted, create_by, create_date, update_by, update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		p.id, p.parent_id, p.number, p.name, p.short_name, p.sex, p.age, p.identification, p.phone, p.emergency_contact_phone,
+		p.qq, p.weixin, p.mail, p.height, p.weight, p.birthday, p.province, p.city, p.county, p.map_x, p.map_y, p.nation, p.zodiac, 
+		p.constellations, p.blood_type, p.education_background, p.graduate_institution, p.profession, p.position, p.education_experience, 
+		p.education_years, p.marital_status, p.registered_address, p.address, p.remark, p.hobbies_interests, p.dream, p.photo, 
+		p.status, p.deleted, p.create_by, p.create_date, p.update_by, p.update_date
+  	</sql>
+  
+ 	 <!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" /> 
+    	from 
+    		t_personnel
+    	where 
+    		id = #{id, jdbcType=INTEGER}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="com.jtgl.person.model.Person" resultMap="BaseResultMap">
+   		select 
+   			<include refid="Base_Column_List_Alias" />	
+ 		from 
+ 			t_personnel p
+    	where 
+    		1 = 1 AND deleted = 0
+   		<if test="id != null">
+			AND p.id NOT IN (#{id})
+		</if>
+   		<if test="ids != null">
+			AND p.id IN (${ids})
+		</if>
+		<if test="parentId != null">
+			AND p.parent_id = #{parentId}
+		</if>
+		<if test="name != null">
+			AND p.name like CONCAT('%',#{name},'%')
+		</if>
+		<if test="position != null and position != ''">
+			AND month(p.birthday) = '${position}'
+		</if>
+  	</select>
+
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="com.jtgl.person.model.Person" resultMap="BaseResultMap">
+    	select <include refid="Base_Column_List" />
+    		from t_personnel p
+    	where 1 = 1 AND deleted = 0
+    	<if test="name != null">
+        	AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 查询最大编号 -->
+  	<select id="selectMaxNumber" resultType="java.lang.String">
+    	select max(number) as number from t_personnel
+  	</select>
+  	
+  	<select id="selectByTree" parameterType="com.jtgl.person.model.Person" resultMap="BaseResultMap">
+	    select a.*, ifnull(b.count,0)  as child_count
+	    from (
+	    select * from t_personnel where 1=1 and deleted = 0
+	        <if test="parentId != null">
+	            <if test="parentId ==0">
+	                AND parent_id is null
+	            </if>
+	            <if test="parentId !=0">
+	                AND parent_id = #{parentId,jdbcType=INTEGER}
+	            </if>
+	        </if>
+	    ) a left JOIN
+	    (select b.parent_id, count(1) as count
+	    from (select * from t_personnel WHERE 1=1 and deleted = 0
+	        <if test="parentId != null">
+	            <if test="parentId ==0">
+	                AND parent_id is null
+	            </if>
+	            <if test="parentId !=0">
+	                AND parent_id = #{parentId,jdbcType=INTEGER}
+	            </if>
+	        </if>
+	    ) a LEFT JOIN t_personnel b
+	    on a.id = b.parent_id
+	    group by b.parent_id) b
+	    on a.id = b.parent_id
+	    order by a.create_date desc
+    </select>
+  
+  	<!-- 查询指定字段的数据(以后方便地图地址解析和逆地址解析) -->
+  	<select id="findMapData" resultType="java.util.HashMap">
+    	select p.id, p.number, p.name, p.sex, p.phone, p.photo, p.province, p.city, p.county, p.map_x as mapX, p.map_y as mapY, p.address 
+    	from 
+    		t_personnel p
+    	where 
+    		1 = 1 and p.deleted = 0
+  	</select>
+  
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from t_personnel where id = #{id, jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update t_personnel set deleted = 1 where id = #{id, jdbcType=INTEGER}
+  	</update>
+  
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="com.jtgl.person.model.Person">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_personnel (
+			id, parent_id, number, name, short_name, sex, age, identification, phone, emergency_contact_phone,
+			qq, weixin, mail, height, weight, birthday, province, city, county, map_x, map_y, nation, zodiac, constellations, blood_type, 
+			education_background, graduate_institution, profession, position, education_experience, 
+			education_years, marital_status, registered_address, address, remark, hobbies_interests,
+			dream, photo, status, deleted, create_by, create_date, update_by, update_date
+		)
+		values (
+			#{id, jdbcType=INTEGER}, #{parentId, jdbcType=INTEGER}, #{number, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR},
+			#{shortName, jdbcType=VARCHAR}, #{sex, jdbcType=VARCHAR}, #{age, jdbcType=INTEGER}, #{identification, jdbcType=VARCHAR},
+			#{phone, jdbcType=VARCHAR}, #{emergencyContactPhone, jdbcType=VARCHAR}, #{qq, jdbcType=VARCHAR}, #{weixin, jdbcType=VARCHAR},
+			#{mail, jdbcType=VARCHAR}, #{height, jdbcType=FLOAT}, #{weight, jdbcType=FLOAT}, #{birthday, jdbcType=TIMESTAMP}, 
+			#{province, jdbcType=VARCHAR},#{city, jdbcType=VARCHAR},#{county, jdbcType=VARCHAR},#{mapX, jdbcType=VARCHAR},#{mapY, jdbcType=VARCHAR},
+			#{nation, jdbcType=VARCHAR}, #{zodiac, jdbcType=VARCHAR}, #{constellations, jdbcType=VARCHAR}, #{bloodType, jdbcType=VARCHAR},
+			#{educationBackground, jdbcType=VARCHAR}, #{graduateInstitution, jdbcType=VARCHAR}, #{profession, jdbcType=VARCHAR}, 
+			#{position, jdbcType=VARCHAR}, #{educationExperience, jdbcType=VARCHAR}, #{educationYears, jdbcType=INTEGER}, 
+			#{maritalStatus, jdbcType=VARCHAR}, #{registeredAddress, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR}, #{remark, jdbcType=VARCHAR}, 
+			#{hobbiesInterests, jdbcType=VARCHAR}, #{dream, jdbcType=VARCHAR}, #{photo, jdbcType=VARCHAR}, #{status, jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER},
+			#{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}
+		)
+  	</insert>
+  	
+  	<insert id="insertSelective" parameterType="com.jtgl.person.model.Person">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_personnel
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="parentId != null">parent_id, </if>
+			<if test="number != null">number, </if>
+			<if test="name != null">name, </if>
+			<if test="shortName != null">short_name, </if>
+			<if test="sex != null">sex, </if>
+			<if test="age != null">age, </if>
+			<if test="identification != null">identification, </if>
+			<if test="phone != null">phone, </if>
+			<if test="emergencyContactPhone != null">emergency_contact_phone, </if>
+			<if test="qq != null">qq, </if>
+			<if test="weixin != null">weixin, </if>
+			<if test="mail != null">mail, </if>
+			<if test="height != null">height, </if>
+			<if test="weight != null">weight, </if>
+			<if test="birthday != null">birthday, </if>
+			<if test="province != null">province, </if>
+			<if test="city != null">city, </if>
+			<if test="county != null">county, </if>
+			<if test="mapX != null">map_x, </if>
+			<if test="mapY != null">map_y, </if>
+			<if test="nation != null">nation, </if>
+			<if test="zodiac != null">zodiac, </if>
+			<if test="constellations != null">constellations, </if>
+			<if test="bloodType != null">blood_type, </if>
+			<if test="educationBackground != null">education_background, </if>
+			<if test="graduateInstitution != null">graduate_institution, </if>
+			<if test="profession != null">profession, </if>
+			<if test="position != null">position, </if>
+			<if test="educationExperience != null">education_experience, </if>
+			<if test="educationYears != null">education_years, </if>
+			<if test="maritalStatus != null">marital_status, </if>
+			<if test="registeredAddress != null">registered_address, </if>
+			<if test="address != null">address, </if>
+			<if test="remark != null">remark, </if>
+			<if test="hobbiesInterests != null">hobbies_interests, </if>
+			<if test="dream != null">dream, </if>
+			<if test="photo != null">photo, </if>
+			<if test="status != null">status, </if>
+			<if test="deleted != null">deleted, </if>
+			<if test="createBy != null">create_by, </if>
+		    <if test="createDate != null">create_date, </if>
+		    <if test="updateBy != null">update_by, </if>
+		    <if test="updateDate != null">update_date, </if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id, jdbcType=INTEGER}, </if>
+			<if test="parentId != null">#{parentId, jdbcType=INTEGER}, </if>
+			<if test="number != null">#{number, jdbcType=VARCHAR}, </if>
+			<if test="name != null">#{name, jdbcType=VARCHAR}, </if>
+			<if test="shortName != null">#{shortName, jdbcType=VARCHAR}, </if>
+			<if test="sex != null">#{sex, jdbcType=VARCHAR}, </if>
+			<if test="age != null">#{age, jdbcType=INTEGER}, </if>
+			<if test="identification != null">#{identification, jdbcType=VARCHAR}, </if>
+			<if test="phone != null">#{phone, jdbcType=VARCHAR}, </if>
+			<if test="emergencyContactPhone != null">#{emergencyContactPhone, jdbcType=VARCHAR}, </if>
+			<if test="qq != null">#{qq, jdbcType=VARCHAR}, </if>
+			<if test="weixin != null">#{weixin, jdbcType=VARCHAR}, </if>
+			<if test="mail != null">#{mail, jdbcType=VARCHAR}, </if>
+			<if test="height != null">#{height, jdbcType=FLOAT}, </if>
+			<if test="weight != null">#{weight, jdbcType=FLOAT}, </if>
+			<if test="birthday != null">#{birthday, jdbcType=TIMESTAMP}, </if>
+			<if test="province != null">#{province, jdbcType=VARCHAR}, </if>
+			<if test="city != null">#{city, jdbcType=VARCHAR}, </if>
+			<if test="county != null">#{county, jdbcType=VARCHAR}, </if>
+			<if test="mapX != null">#{mapX, jdbcType=VARCHAR}, </if>
+			<if test="mapY != null">#{mapY, jdbcType=VARCHAR}, </if>
+			<if test="nation != null">#{nation, jdbcType=VARCHAR}, </if>
+			<if test="zodiac != null">#{zodiac, jdbcType=VARCHAR}, </if>
+			<if test="constellations != null">#{constellations, jdbcType=VARCHAR}, </if>
+			<if test="bloodType != null">#{bloodType, jdbcType=VARCHAR}, </if>
+			<if test="educationBackground != null">#{educationBackground, jdbcType=VARCHAR}, </if>
+			<if test="graduateInstitution != null">#{graduateInstitution, jdbcType=VARCHAR}, </if>
+			<if test="profession != null">#{profession, jdbcType=VARCHAR}, </if>
+			<if test="position != null">#{position, jdbcType=VARCHAR}, </if>
+			<if test="educationExperience != null">#{educationExperience, jdbcType=VARCHAR}, </if>
+			<if test="educationYears != null">#{educationYears, jdbcType=INTEGER}, </if>
+			<if test="maritalStatus != null">#{maritalStatus, jdbcType=VARCHAR}, </if>
+			<if test="registeredAddress != null">#{registeredAddress, jdbcType=VARCHAR}, </if>
+			<if test="address != null">#{address, jdbcType=VARCHAR}, </if>
+			<if test="remark != null">#{remark, jdbcType=VARCHAR}, </if>
+			<if test="hobbiesInterests != null">#{hobbiesInterests, jdbcType=VARCHAR}, </if>
+			<if test="dream != null">#{dream, jdbcType=VARCHAR}, </if>
+			<if test="photo != null">#{photo, jdbcType=VARCHAR}, </if>
+			<if test="status != null">#{status, jdbcType=INTEGER}, </if>
+			<if test="deleted != null">#{deleted, jdbcType=INTEGER}, </if>
+			<if test="createBy != null">#{createBy, jdbcType=INTEGER}, </if>
+			<if test="createDate != null">#{createDate, jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">#{updateBy, jdbcType=INTEGER}, </if>
+			<if test="updateDate != null">#{updateDate, jdbcType=TIMESTAMP}, </if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="com.jtgl.person.model.Person">
+    	update t_personnel
+		<set>
+        	<if test="parentId != null">parent_id = #{parentId, jdbcType=INTEGER}, </if>
+        	<if test="number != null">number = #{number, jdbcType=VARCHAR}, </if>
+        	<if test="name != null">name = #{name, jdbcType=VARCHAR}, </if>
+        	<if test="shortName != null">short_name = #{shortName, jdbcType=VARCHAR}, </if>
+        	<if test="sex != null">sex = #{sex, jdbcType=VARCHAR}, </if>
+        	<if test="age != null">age = #{age, jdbcType=INTEGER}, </if>
+        	<if test="identification != null">identification = #{identification, jdbcType=VARCHAR}, </if>
+        	<if test="phone != null">phone = #{phone, jdbcType=VARCHAR}, </if>
+        	<if test="emergencyContactPhone != null">emergency_contact_phone = #{emergencyContactPhone, jdbcType=VARCHAR}, </if>
+        	<if test="qq != null">qq = #{qq, jdbcType=VARCHAR}, </if>
+        	<if test="weixin != null">weixin = #{weixin, jdbcType=VARCHAR}, </if>
+        	<if test="mail != null">mail = #{mail, jdbcType=VARCHAR}, </if>
+        	<if test="height != null">height = #{height, jdbcType=FLOAT}, </if>
+        	<if test="weight != null">weight = #{weight, jdbcType=FLOAT}, </if>
+        	<if test="birthday != null">birthday = #{birthday, jdbcType=TIMESTAMP}, </if>
+        	<if test="province != null">province = #{province, jdbcType=VARCHAR}, </if>
+        	<if test="city != null">city = #{city, jdbcType=VARCHAR}, </if>
+        	<if test="county != null">county = #{county, jdbcType=VARCHAR}, </if>
+        	<if test="mapX != null">map_x = #{mapX, jdbcType=VARCHAR}, </if>
+        	<if test="mapY != null">map_y = #{mapY, jdbcType=VARCHAR}, </if>
+        	<if test="nation != null">nation = #{nation, jdbcType=VARCHAR}, </if>
+        	<if test="zodiac != null">zodiac = #{zodiac, jdbcType=VARCHAR}, </if>
+        	<if test="constellations != null">constellations = #{constellations, jdbcType=VARCHAR}, </if>
+        	<if test="bloodType != null">blood_type = #{bloodType, jdbcType=VARCHAR}, </if>
+        	<if test="educationBackground != null">education_background = #{educationBackground, jdbcType=VARCHAR}, </if>
+        	<if test="graduateInstitution != null">graduate_institution = #{graduateInstitution, jdbcType=VARCHAR}, </if>
+        	<if test="profession != null">profession = #{profession, jdbcType=VARCHAR}, </if>
+        	<if test="position != null">position = #{position, jdbcType=VARCHAR}, </if>
+        	<if test="educationExperience != null">education_experience = #{educationExperience, jdbcType=VARCHAR}, </if>
+        	<if test="educationYears != null">education_years = #{educationYears, jdbcType=INTEGER}, </if>
+        	<if test="maritalStatus != null">marital_status = #{maritalStatus, jdbcType=VARCHAR}, </if>
+        	<if test="registeredAddress != null">registered_address = #{registeredAddress, jdbcType=VARCHAR}, </if>
+        	<if test="address != null">address = #{address, jdbcType=VARCHAR}, </if>
+        	<if test="remark != null">remark = #{remark, jdbcType=VARCHAR}, </if>
+        	<if test="hobbiesInterests != null">hobbies_interests = #{hobbiesInterests, jdbcType=VARCHAR}, </if>
+        	<if test="dream != null">dream = #{dream, jdbcType=VARCHAR}, </if>
+        	<if test="photo != null">photo = #{photo, jdbcType=VARCHAR}, </if>
+        	<if test="status != null">status = #{status, jdbcType=INTEGER}, </if>
+        	<if test="deleted != null">deleted = #{deleted, jdbcType=INTEGER}, </if>
+        	<if test="createBy != null">create_by = #{createBy, jdbcType=INTEGER}, </if>
+        	<if test="createDate != null">create_date = #{createDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="updateBy != null">update_by = #{updateBy, jdbcType=INTEGER}, </if>
+        	<if test="updateDate != null">update_date = #{updateDate, jdbcType=TIMESTAMP}, </if>
+	    </set>
+    	where id = #{id, jdbcType=INTEGER}
+ 	</update>
+ 	
+  	<update id="updateByPrimaryKey" parameterType="com.jtgl.person.model.Person">
+    	update t_personnel
+    	<set>
+		    parent_id = #{parentId, jdbcType=INTEGER},
+		    number = #{number, jdbcType=VARCHAR},
+		    name = #{name, jdbcType=VARCHAR},
+		    short_name = #{shortName, jdbcType=VARCHAR},
+		    sex = #{sex, jdbcType=VARCHAR},
+		    age = #{age, jdbcType=INTEGER},
+		    identification = #{identification, jdbcType=VARCHAR},
+		    phone = #{phone, jdbcType=VARCHAR},
+		    emergency_contact_phone = #{emergencyContactPhone, jdbcType=VARCHAR},
+		    qq = #{qq, jdbcType=VARCHAR},
+		    weixin = #{weixin, jdbcType=VARCHAR},
+		    mail = #{mail, jdbcType=VARCHAR},
+		    height = #{height, jdbcType=FLOAT},
+		    weight = #{weight, jdbcType=FLOAT},
+		    birthday = #{birthday, jdbcType=TIMESTAMP},
+		    province = #{province, jdbcType=VARCHAR}, 
+		    city = #{city, jdbcType=VARCHAR}, 
+		    county = #{county, jdbcType=VARCHAR}, 
+		    map_x = #{mapX, jdbcType=VARCHAR}, 
+		    map_y = #{mapY, jdbcType=VARCHAR},
+		    nation = #{nation, jdbcType=VARCHAR},
+		    zodiac = #{zodiac, jdbcType=VARCHAR},
+		    constellations = #{constellations, jdbcType=VARCHAR},
+		    blood_type = #{bloodType, jdbcType=VARCHAR},
+		    education_background = #{educationBackground, jdbcType=VARCHAR},
+		    graduate_institution = #{graduateInstitution, jdbcType=VARCHAR},
+		    profession = #{profession, jdbcType=VARCHAR},
+		    position = #{position, jdbcType=VARCHAR},
+		    education_experience = #{educationExperience, jdbcType=VARCHAR},
+		    education_years = #{educationYears, jdbcType=INTEGER},
+		    marital_status = #{maritalStatus, jdbcType=VARCHAR},
+		    registered_address = #{registeredAddress, jdbcType=VARCHAR},
+		    address = #{address, jdbcType=VARCHAR},
+		    remark = #{remark, jdbcType=VARCHAR},
+		    hobbies_interests = #{hobbiesInterests, jdbcType=VARCHAR},
+		    dream = #{dream, jdbcType=VARCHAR},
+		    photo = #{photo, jdbcType=VARCHAR},
+		    status = #{status, jdbcType=INTEGER},
+		    deleted = #{deleted, jdbcType=INTEGER},
+		    create_by = #{createBy, jdbcType=INTEGER}, 
+        	create_date = #{createDate, jdbcType=TIMESTAMP},
+        	update_by = #{updateBy, jdbcType=INTEGER},
+        	update_date = #{updateDate, jdbcType=TIMESTAMP}
+		</set>
+    	where id = #{id, jdbcType=INTEGER}
+  </update>
+
+</mapper>

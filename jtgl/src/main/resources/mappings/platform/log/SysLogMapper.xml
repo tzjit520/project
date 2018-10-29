@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.system.log.mapper.SysLogMapper">
+  <resultMap id="BaseResultMap" type="com.platform.system.log.model.SysLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="remote_ip" jdbcType="VARCHAR" property="remoteIp" />
+    <result column="request_uri" jdbcType="VARCHAR" property="requestUri" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="module" jdbcType="VARCHAR" property="module" />
+    <result column="operate" jdbcType="VARCHAR" property="operate" />
+    <result column="log_level" jdbcType="VARCHAR" property="level" />
+    <result column="request_time" jdbcType="INTEGER" property="requestTime" />
+  </resultMap>
+  
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.platform.system.log.model.SysLog">
+    <result column="request_data" jdbcType="LONGVARCHAR" property="requestData" />
+    <result column="response_data" jdbcType="LONGVARCHAR" property="responseData" />
+    <result column="exception" jdbcType="LONGVARCHAR" property="exception" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, type, create_by, create_date, remote_ip, request_uri, method, module, operate, log_level, request_time
+  </sql>
+  
+  <sql id="Blob_Column_List">
+    request_data, response_data, exception
+  </sql>
+  
+  <sql id="Base_Column_List_Alias">
+    log.id, log.type, log.create_by, log.create_date, log.remote_ip, log.request_uri, log.method, log.module, log.operate, log.log_level, log.request_time
+  </sql>
+  
+  <sql id="Blob_Column_List_Alias">
+    log.request_data, log.response_data, log.exception
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    	<include refid="Base_Column_List_Alias" />,
+    	<include refid="Blob_Column_List_Alias" />
+    from 
+    	sys_t_log log
+    where 
+    	log.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByProperties" parameterType="com.platform.system.log.model.SysLog" resultMap="ResultMapWithBLOBs">
+    select  
+    	<include refid="Base_Column_List_Alias" />
+    from 
+    	sys_t_log log
+    where 1=1
+    <if test="remoteIp != null and remoteIp != ''">
+      AND log.remote_ip  like CONCAT('%',#{remoteIp},'%' )
+    </if>
+    <if test="type != null">
+      AND log.type = #{type}
+    </if>
+    <if test="level != null and level != ''">
+      AND log.log_level = #{level}
+    </if>
+    <if test="queryBeginDate != null">
+      AND log.create_date <![CDATA[ >= #{queryBeginDate} ]]>
+    </if>
+    <if test="queryEndDate != null">
+      AND log.create_date <![CDATA[ <= #{queryEndDate} ]]>
+    </if>
+    order by log.create_date desc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_t_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.platform.system.log.model.SysLog">
+    insert into sys_t_log (id, type, create_by, 
+      create_date, remote_ip, request_uri, 
+      method, module, operate, log_level, request_time,
+      request_data, response_data, exception
+      )
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{createBy,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{remoteIp,jdbcType=VARCHAR}, #{requestUri,jdbcType=VARCHAR}, 
+      #{method,jdbcType=VARCHAR}, #{module,jdbcType=VARCHAR}, #{operate,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{requestTime,jdbcType=INTEGER},
+      #{requestData,jdbcType=LONGVARCHAR}, #{responseData,jdbcType=LONGVARCHAR}, #{exception,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.platform.system.log.model.SysLog">
+    insert into sys_t_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="remoteIp != null">
+        remote_ip,
+      </if>
+      <if test="requestUri != null">
+        request_uri,
+      </if>
+      <if test="method != null">
+        method,
+      </if>
+      <if test="module != null">
+        module,
+      </if>
+      <if test="operate != null">
+        operate,
+      </if>
+      <if test="level != null">
+        log_level,
+      </if>
+      <if test="requestTime!= null">
+        request_time,
+      </if>
+      <if test="requestData != null">
+        request_data,
+      </if>
+      <if test="responseData != null">
+        response_data,
+      </if>
+      <if test="exception != null">
+        exception,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remoteIp != null">
+        #{remoteIp,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="module != null">
+        #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="operate != null">
+        #{operate,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null">
+        #{requestTime,jdbcType=INTEGER},
+      </if>
+      <if test="requestData != null">
+        #{requestData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="responseData != null">
+        #{responseData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="exception != null">
+        #{exception,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.platform.system.log.model.SysLog">
+    update sys_t_log
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remoteIp != null">
+        remote_ip = #{remoteIp,jdbcType=VARCHAR},
+      </if>
+      <if test="requestUri != null">
+        request_uri = #{requestUri,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="module != null">
+        module = #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="operate != null">
+        operate = #{operate,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        log_level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTime != null">
+        request_time = #{requestTime,jdbcType=INTEGER},
+      </if>
+      <if test="requestData != null">
+        request_data = #{requestData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="responseData != null">
+        response_data = #{responseData,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="exception != null">
+        exception = #{exception,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.platform.system.log.model.SysLog">
+    update sys_t_log
+    set type = #{type,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      remote_ip = #{remoteIp,jdbcType=VARCHAR},
+      request_uri = #{requestUri,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      module = #{module,jdbcType=VARCHAR},
+      operate = #{operate,jdbcType=VARCHAR},
+      log_level = #{level,jdbcType=VARCHAR},
+      request_time = #{requestTime,jdbcType=INTEGER},
+      request_data = #{requestData,jdbcType=LONGVARCHAR},
+      response_data = #{responseData,jdbcType=LONGVARCHAR},
+      exception = #{exception,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.platform.system.log.model.SysLog">
+    update sys_t_log
+    set type = #{type,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      remote_ip = #{remoteIp,jdbcType=VARCHAR},
+      request_uri = #{requestUri,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      module = #{module,jdbcType=VARCHAR},
+      operate = #{operate,jdbcType=VARCHAR},
+      log_level = #{level,jdbcType=VARCHAR},
+      request_time = #{requestTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 清除指定的日志保留天数之前的系统日志 -->
+  <delete id="cleanLogs">
+	delete from sys_t_log where type IN
+	<foreach collection="logTypes" item="logType" open="(" separator="," close=")">
+		#{logType}
+	</foreach>
+	and HOUR(timediff(now(),create_date)) > #{reserverHours}
+  </delete>
+</mapper>

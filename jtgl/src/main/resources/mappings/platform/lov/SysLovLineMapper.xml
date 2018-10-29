@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.system.lov.mapper.SysLovLineMapper">
+
+	<resultMap id="BaseResultMap" type="com.platform.system.lov.model.SysLovLine">
+		<id column="id" jdbcType="INTEGER" javaType="java.lang.Integer" property="id" />
+		<result column="lov_id" jdbcType="INTEGER" property="lovId" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="value" jdbcType="VARCHAR" property="value" />
+		<result column="sort" jdbcType="INTEGER" property="sort" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="deleted" jdbcType="INTEGER" property="deleted" />
+		<result column="create_by" jdbcType="INTEGER" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="update_by" jdbcType="INTEGER" property="updateBy" />
+		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+
+		<association property="sysLov" column="lov_id" javaType="com.platform.system.lov.model.SysLov">
+			<id property="id" column="parent_lov_id" jdbcType="INTEGER" />
+			<result property="name" column="lov_name" jdbcType="VARCHAR" />
+			<result property="code" column="lov_code" jdbcType="VARCHAR" />
+		</association>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, lov_id, code, name, value, sort, status, create_by, create_date, update_by, update_date,remark
+	</sql>
+	
+	<sql id="Base_Column_List_Alias">
+		line.id, line.lov_id, line.code, line.name, line.value, line.sort, line.status,
+		line.create_by, line.create_date, line.update_by, line.update_date, line.remark
+	</sql>
+	
+	<select id="selectByProperties" parameterType="com.platform.system.lov.model.SysLovLine" resultMap="BaseResultMap">
+		select DISTINCT
+			<include refid="Base_Column_List_Alias" />,
+			sysLov.id as parent_lov_id,sysLov.NAME as lov_name,sysLov.code as lov_code
+		from 
+			sys_t_lovline line 
+			LEFT JOIN sys_t_lov sysLov on sysLov.id = line.lov_id
+		where 
+			1 = 1 and line.deleted = 0
+		<if test="name != null">
+			AND line.name like CONCAT('%',#{name},'%' )
+		</if>
+		<if test="code != null">
+			AND line.code like CONCAT('%',#{code},'%' )
+		</if>
+		<if test="lovId != null">
+			AND line.lov_id = #{lovId, jdbcType=INTEGER}
+		</if>
+		<if test="lovType != null and lovType!=''">
+			AND sysLov.code = #{lovType}
+		</if>
+		order by line.lov_id desc, line.sort asc
+	</select>
+	
+	<!-- 根据值类型编码返回其包含的值列表，该方法考虑了值类型的鉴权问题 -->
+	<select id="selectByCode" parameterType="com.platform.system.lov.model.SysLovLine" resultMap="BaseResultMap">
+    	select DISTINCT
+			<include refid="Base_Column_List_Alias" />,
+			sysLov.id as parent_lov_id, sysLov.NAME as lov_name, sysLov.code as lov_code
+		from 
+			sys_t_lovline line 
+			LEFT JOIN sys_t_lov sysLov on sysLov.id = line.lov_id
+		where 
+			1 = 1 and line.deleted = 0		
+		<if test="lovCode != null">
+			AND sysLov.code = #{lovCode, jdbcType=VARCHAR}
+		</if>		
+		order by line.sort desc
+  	</select>
+  
+	<select id="selectByUnique" parameterType="com.platform.system.lov.model.SysLovLine" resultMap="BaseResultMap">
+		select
+			<include refid="Base_Column_List" />
+		from 
+			sys_t_lovline
+		where 
+			1 = 1 and deleted = 0
+		<if test="name != null">
+			AND name = #{name}
+		</if>
+		<if test="code != null">
+			AND code = #{code}
+		</if>
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_t_lovline
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_t_lovline
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+		update sys_t_lovline set deleted = 1
+     	where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteByLovId" parameterType="java.lang.Integer">
+		delete from sys_t_lovline
+		where lov_id = #{lovId, jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="logicalDeleteByLovId" parameterType="java.lang.Integer">
+		update sys_t_lovline set deleted = 1
+		where lov_id = #{lovId, jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insert" parameterType="com.platform.system.lov.model.SysLovLine">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_t_lovline (id, lov_id, code,
+		name, value, sort, status,
+		create_by, create_date, update_by,
+		update_date, remark)
+		values (#{id,jdbcType=INTEGER}, #{lovId,jdbcType=INTEGER},
+		#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{value,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
+		#{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+		#{updateBy,jdbcType=INTEGER},
+		#{updateDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="insertSelective" parameterType="com.platform.system.lov.model.SysLovLine">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_t_lovline
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="lovId != null">
+				lov_id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="value != null">
+				value,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="lovId != null">
+				#{lovId,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.platform.system.lov.model.SysLovLine">
+		update sys_t_lovline
+		<set>
+			<if test="lovId != null">
+				lov_id = #{lovId,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				value = #{value,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="com.platform.system.lov.model.SysLovLine">
+		update sys_t_lovline
+		set lov_id = #{lovId,jdbcType=INTEGER},
+		code = #{code,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		value = #{value,jdbcType=VARCHAR},
+		sort = #{sort,jdbcType=INTEGER},
+		status = #{status,jdbcType=INTEGER},
+		create_by = #{createBy,jdbcType=INTEGER},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		update_by = #{updateBy,jdbcType=INTEGER},
+		update_date = #{updateDate,jdbcType=TIMESTAMP},
+		remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

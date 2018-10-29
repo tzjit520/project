@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.system.user.mapper.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.platform.system.user.model.SysUser">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="unit_id" jdbcType="INTEGER" property="unitId" />
+        <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="work_number" jdbcType="VARCHAR" property="workNumber" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="headimgurl" jdbcType="VARCHAR" property="headimgurl" />
+        <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="login_flag" jdbcType="INTEGER" property="loginFlag" />
+        <result column="lock_day" jdbcType="INTEGER" property="lockDay" />
+        <result column="lock_date" jdbcType="TIMESTAMP" property="lockDate" />
+        <result column="token" jdbcType="VARCHAR" property="token" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="deleted" jdbcType="INTEGER" property="deleted" />
+        <result column="create_by" jdbcType="INTEGER" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        
+        <association property="companyUnit"  column="unit_id" javaType="com.platform.system.unit.model.SysUnit" >
+            <id property="id" column="unit_id" jdbcType="INTEGER"/>
+            <result property="name" column="unit_name" jdbcType="VARCHAR"/>
+        </association>
+        <association property="departmentUnit"  column="dept_id" javaType="com.platform.system.unit.model.SysUnit" >
+            <id property="id" column="dept_id" jdbcType="INTEGER"/>
+            <result property="name" column="dept_name" jdbcType="VARCHAR"/>
+        </association>
+        <collection property="roleList" ofType="com.platform.system.role.model.SysRole">
+            <id column="role_id" property="id" jdbcType="INTEGER"/>
+            <result column="role_name" property="name" jdbcType="VARCHAR" />
+            <result column="role_code" property="code" jdbcType="VARCHAR" />
+        </collection>
+        <collection property="permissionList" ofType="com.platform.system.permission.model.SysPermission">
+            <id column="permission_id" property="id" jdbcType="INTEGER"/>
+            <result column="permission" property="permission" jdbcType="VARCHAR" />
+            <result column="resource_id" property="resourceId" jdbcType="INTEGER"/>
+            <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+            <result column="resource_code" property="resourceCode" jdbcType="VARCHAR" />
+            <result column="operation_id" property="operationId" jdbcType="INTEGER"/>
+            <result column="operation_name" property="operationName" jdbcType="VARCHAR" />
+            <result column="operation_code" property="operationCode" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, unit_id, dept_id, code, name, work_number, password, sex, headimgurl, telephone, mobile, email, 
+        login_flag, lock_day, lock_date, token, remark, status, deleted, create_by, create_date, update_by, update_date
+    </sql>
+    
+    <sql id="Base_Column_List_Alias">
+    	user.id, user.unit_id, user.dept_id, user.code, user.name, user.work_number, user.password, user.sex, user.headimgurl, 
+    	user.telephone, user.mobile, user.email, user.login_flag, user.lock_day, user.lock_date, user.token, user.remark, 
+    	user.status, user.deleted, user.create_by, user.create_date, user.update_by, user.update_date
+    </sql>
+    
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+	        <include refid="Base_Column_List_Alias" />,
+	        companyUnit.id as unit_id, companyUnit.name as unit_name,
+	        departmentUnit.id as dept_id,departmentUnit.name as dept_name,
+	        ur.role_id
+        from 
+        	sys_t_user user 
+        	left join sys_t_unit companyUnit on companyUnit.id = user.unit_id 
+        	left join sys_t_unit departmentUnit on departmentUnit.id = user.dept_id
+        	left join sys_t_user_role ur on ur.user_id = user.id
+        where 
+        	user.id = #{id,jdbcType=INTEGER} AND user.deleted = 0 
+    </select>
+
+    <select id="selectByProperties" parameterType="com.platform.system.user.model.SysUser" resultMap="BaseResultMap">
+        select DISTINCT 
+	        <include refid="Base_Column_List_Alias" />,
+	        companyUnit.name as unit_name, departmentUnit.name as dept_name
+        from 
+        	sys_t_user user 
+        	left join sys_t_unit companyUnit on companyUnit.id = user.unit_id 
+        	left join sys_t_unit departmentUnit on departmentUnit.id = user.dept_id
+	        <if test="roleId != null">
+	            left join sys_t_user_role ur on ur.user_id = user.id
+	        </if>
+        where user.deleted = 0 
+        <if test="name != null">
+            AND user.name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="code != null">
+            AND user.code like CONCAT('%',#{code},'%')
+        </if>
+        <if test="unitId != null and unitId != 0">
+            AND user.unit_id = #{unitId}
+        </if>
+        <if test="deptId != null and deptId != 0">
+            AND user.dept_id = #{deptId}
+        </if>
+        <if test="roleId != null">
+            AND ur.role_id = #{roleId}
+        </if>
+        order by user.create_date desc
+    </select>
+
+    <select id="selectByUnique" parameterType="com.platform.system.user.model.SysUser" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from 
+        	sys_t_user
+        where deleted = 0 
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="code != null">
+            AND code = #{code}
+        </if>
+    </select>
+    
+    <select id="selectAuthByProperties" parameterType="com.platform.system.user.model.SysUser" resultMap="BaseResultMap">
+        SELECT DISTINCT 
+        	u.*, r.id as role_id, r.code as role_code, r.name as role_name, 
+        	re.id as resource_id, re.name as resource_name,
+        	o.id as operation_id, o.name as operation_name,
+        	p.id as permission_id, concat(re.code,':',o.code) as permission
+        from 
+        	sys_t_user u LEFT JOIN sys_t_user_role ur on u.id = ur.user_id 
+        	LEFT JOIN sys_t_role r on r.id = ur.role_id 
+        	LEFT JOIN sys_t_role_permission rp on r.id = rp.role_id
+	        LEFT JOIN sys_t_permission p on p.id = rp.permission_id
+	        LEFT JOIN sys_t_resource re on re.id = p.resource_id 
+	        LEFT JOIN sys_t_operation o on o.id=p.operation_id
+        where 
+        	1=1  AND u.deleted = 0 and rp.deleted = 0
+        <if test="name != null">
+            AND u.name = #{name}
+        </if>
+        <if test="code != null">
+            AND u.code = #{code}
+        </if>
+    </select>
+    
+    <select id="selectUserListByPermission" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select 
+			<!-- re.id as resource_id, re.name as resource_name, o.id as operation_id, o.name as operation_name,
+			p.id as permission_id, concat(re.code,':',o.code) as permission, rp.role_id as role_id, 
+			r.`code` as `code`, r.`name` as `name`,  u.id as user_id, u.`code` as `code`, u.`name` as `name`
+			-->
+			<include refid="Base_Column_List_Alias" />
+		from 
+			sys_t_permission p 
+			LEFT JOIN sys_t_resource re on re.id = p.resource_id and re.deleted = 0
+			LEFT JOIN sys_t_operation o on o.id = p.operation_id and o.deleted = 0
+			LEFT JOIN sys_t_role_permission rp on rp.permission_id = p.id and rp.deleted = 0
+			LEFT JOIN sys_t_role r on r.id = rp.role_id and r.deleted = 0
+			LEFT JOIN sys_t_user_role ur on ur.role_id = r.id and ur.deleted = 0
+			LEFT JOIN sys_t_user user on ur.user_id = user.id and user.deleted = 0
+		where 
+			p.deleted = 0 
+        <if test="permission != null">
+            and concat(re.code,':',o.code) = #{permission}
+        </if>
+    </select>
+    
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update sys_t_user
+		set deleted = 1 
+		where id = #{id,jdbcType=INTEGER}
+    </update>
+  
+  	<delete id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update sys_t_user set deleted = 1
+	    where id = #{id,jdbcType=INTEGER}
+  	</delete>
+  
+    <insert id="insert" parameterType="com.platform.system.user.model.SysUser">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into sys_t_user (
+	        id, unit_id, dept_id, code, name, work_number, password, sex, headimgurl, telephone, 
+	        mobile, email, login_flag, lock_day, lock_date, token, remark, status, deleted, 
+	        create_by, create_date, update_by, update_date
+        )
+        values (
+	        #{id,jdbcType=INTEGER}, #{unitId,jdbcType=INTEGER}, #{deptId,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, 
+	        #{name,jdbcType=VARCHAR}, #{workNumber,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+	        #{headimgurl,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+	        #{loginFlag,jdbcType=INTEGER}, #{lockDay,jdbcType=INTEGER}, #{lockDate,jdbcType=TIMESTAMP}, #{token,jdbcType=VARCHAR}, 
+	        #{remark,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER},
+	        #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}
+	    )
+    </insert>
+    
+    <insert id="insertSelective" parameterType="com.platform.system.user.model.SysUser">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into sys_t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="unitId != null">
+                unit_id,
+            </if>
+            <if test="deptId != null">
+                dept_id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="workNumber != null">
+                work_number,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="headimgurl != null">
+                headimgurl,
+            </if>
+            <if test="telephone != null">
+                telephone,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="loginFlag != null">
+                login_flag,
+            </if>
+            <if test="lockDay != null">
+                lock_day,
+            </if>
+            <if test="lockDate != null">
+                lock_date,
+            </if>
+            <if test="token != null">
+                token,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="unitId != null">
+                #{unitId,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                #{deptId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="workNumber != null">
+                #{workNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+			<if test="headimgurl != null">
+                #{headimgurl,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="loginFlag != null">
+                #{loginFlag,jdbcType=INTEGER},
+            </if>
+            <if test="lockDay != null">
+                #{lockDay,jdbcType=INTEGER},
+            </if>
+            <if test="lockDate != null">
+                #{lockDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="token != null">
+                #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=INTEGER},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateByPrimaryKeySelective" parameterType="com.platform.system.user.model.SysUser">
+        update sys_t_user
+        <set>
+            <if test="unitId != null">
+                unit_id = #{unitId,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="workNumber != null">
+                work_number = #{workNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="headimgurl != null">
+                headimgurl = #{headimgurl,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="loginFlag != null">
+                login_flag = #{loginFlag,jdbcType=INTEGER},
+            </if>
+            <if test="lockDay != null">
+                lock_day = #{lockDay,jdbcType=INTEGER},
+            </if>
+            <if test="lockDate != null">
+                lock_date = #{lockDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="token != null">
+                token = #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=INTEGER},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <update id="updateByPrimaryKey" parameterType="com.platform.system.user.model.SysUser">
+        update sys_t_user set 
+	        unit_id = #{unitId,jdbcType=INTEGER},
+	        dept_id = #{deptId,jdbcType=INTEGER},
+	        code = #{code,jdbcType=VARCHAR},
+	        name = #{name,jdbcType=VARCHAR},
+	        work_number = #{workNumber,jdbcType=VARCHAR},
+	        password = #{password,jdbcType=VARCHAR},
+	        sex = #{sex,jdbcType=VARCHAR},
+	        headimgurl = #{headimgurl,jdbcType=VARCHAR},
+	        telephone = #{telephone,jdbcType=VARCHAR},
+	        mobile = #{mobile,jdbcType=VARCHAR},
+	        email = #{email,jdbcType=VARCHAR},
+	        login_flag = #{loginFlag,jdbcType=INTEGER},
+	        lock_day = #{lockDay,jdbcType=INTEGER},
+	        lock_date = #{lockDate,jdbcType=TIMESTAMP},
+	        token = #{token,jdbcType=VARCHAR},
+	        remark = #{remark,jdbcType=VARCHAR},
+	        status = #{status,jdbcType=INTEGER},
+	        deleted = #{deleted,jdbcType=INTEGER},
+	        create_by = #{createBy,jdbcType=INTEGER},
+	        create_date = #{createDate,jdbcType=TIMESTAMP},
+	        update_by = #{updateBy,jdbcType=INTEGER},
+	        update_date = #{updateDate,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <update id="insertToken" parameterType="com.platform.system.user.model.SysUser">
+        update sys_t_user
+        set token = #{token,jdbcType=VARCHAR}
+        where code = #{code,jdbcType=VARCHAR}
+    </update>
+
+    <update id="deleteToken" parameterType="java.lang.String">
+        update sys_t_user
+        set token = null
+        where token = #{token,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.task.mapper.SysScheduleJobMapper">
+
+	<resultMap id="BaseResultMap" type="com.platform.task.model.SysScheduleJob">
+		<id column="id" jdbcType="INTEGER" property="id" />
+        <result column="job_name" jdbcType="VARCHAR" property="jobName" />
+        <result column="bean_name" jdbcType="VARCHAR" property="beanName" />
+        <result column="class_name" jdbcType="VARCHAR" property="className" />
+		<result column="method_name" jdbcType="VARCHAR" property="methodName" />
+        <result column="cron_expression" jdbcType="VARCHAR" property="cronExpression" />
+        <result column="concurrent" jdbcType="INTEGER" property="concurrent" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="deleted" jdbcType="INTEGER" property="deleted" />
+        <result column="create_by" jdbcType="INTEGER" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id,
+		job_name,
+		bean_name,
+		class_name,
+		method_name,
+		cron_expression,
+		concurrent,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		sysSchedulejob.id,
+		sysSchedulejob.job_name,
+		sysSchedulejob.bean_name,
+		sysSchedulejob.class_name,
+		sysSchedulejob.method_name,
+		sysSchedulejob.cron_expression,
+		sysSchedulejob.concurrent,
+		sysSchedulejob.remark,
+		sysSchedulejob.status,
+		sysSchedulejob.deleted,
+		sysSchedulejob.create_by,
+		sysSchedulejob.create_date,
+		sysSchedulejob.update_by,
+		sysSchedulejob.update_date
+  	</sql>
+  
+ 	 <!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" /> 
+    	from 
+    		sys_t_schedule_job
+    	where 
+    		id = #{id, jdbcType=INTEGER}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="com.platform.task.model.SysScheduleJob" resultMap="BaseResultMap">
+   		select 
+   			<include refid="Base_Column_List_Alias" />	
+   		from 
+   			sys_t_schedule_job sysSchedulejob
+    	where 
+    		1 = 1 and sysSchedulejob.deleted = 0
+		<if test="jobName != null">
+			AND sysSchedulejob.job_name like CONCAT('%',#{jobName},'%')
+		</if>
+  	</select>
+  	
+  	<!-- 
+  		查询正在运行的任务
+  	-->
+  	<select id="selectRunTaskJob" parameterType="com.platform.task.model.SysScheduleJob" resultMap="BaseResultMap">
+   		select 
+   			<include refid="Base_Column_List_Alias" />	
+   		from 
+   			sys_t_schedule_job sysSchedulejob
+    	where 
+    		1 = 1 and sysSchedulejob.deleted = 0 and sysSchedulejob.status = 1
+  	</select>
+  
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="com.platform.task.model.SysScheduleJob" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" />
+    	from 
+    		sys_t_schedule_job sysSchedulejob
+    	where 
+    		1 = 1 and deleted = 0
+    	<if test="name != null">
+        	AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from sys_t_schedule_job where id = #{id, jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update sys_t_schedule_job set deleted = 1 where id = #{id, jdbcType=INTEGER}
+  	</update>
+  
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="com.platform.task.model.SysScheduleJob">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into sys_t_schedule_job (
+			id,
+			job_name,
+			bean_name,
+			class_name,
+			method_name,
+			cron_expression,
+			concurrent,
+			remark,
+			status,
+			deleted,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		)
+		values (
+			#{id},
+			#{jobName},
+			#{beanName},
+			#{className},
+			#{methodName},
+			#{cronExpression},
+			#{concurrent},
+			#{remark},
+			#{status},
+			#{deleted},
+			#{createBy},
+			#{createDate},
+			#{updateBy},
+			#{updateDate}
+		)
+  	</insert>
+  	
+  	<insert id="insertSelective" parameterType="com.platform.task.model.SysScheduleJob">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into sys_t_schedule_job
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="jobName != null">job_name, </if>
+			<if test="beanName != null">bean_name, </if>
+			<if test="className != null">class_name, </if>
+			<if test="methodName != null">method_name, </if>
+			<if test="cronExpression != null">cron_expression, </if>
+			<if test="concurrent != null">concurrent, </if>
+			<if test="remark != null">remark, </if>
+			<if test="status != null">status, </if>
+			<if test="deleted != null">deleted, </if>
+			<if test="createBy != null">create_by, </if>
+			<if test="createDate != null">create_date, </if>
+			<if test="updateBy != null">update_by, </if>
+			<if test="updateDate != null">update_date, </if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id}, </if>
+			<if test="jobName != null">#{jobName}, </if>
+			<if test="beanName != null">#{beanName}, </if>
+			<if test="className != null">#{className}, </if>
+			<if test="methodName != null">#{methodName}, </if>
+			<if test="cronExpression != null">#{cronExpression}, </if>
+			<if test="concurrent != null">#{concurrent}, </if>
+			<if test="remark != null">#{remark}, </if>
+			<if test="status != null">#{status}, </if>
+			<if test="deleted != null">#{deleted}, </if>
+			<if test="createBy != null">#{createBy}, </if>
+			<if test="createDate != null">#{createDate}, </if>
+			<if test="updateBy != null">#{updateBy}, </if>
+			<if test="updateDate != null">#{updateDate}, </if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="com.platform.task.model.SysScheduleJob">
+    	update sys_t_schedule_job
+		<set>
+        	<if test="jobName != null">job_name = #{jobName}, </if>
+        	<if test="beanName != null">bean_name = #{beanName}, </if>
+        	<if test="className != null">class_name = #{className}, </if>
+			<if test="methodName != null">method_name = #{methodName}, </if>
+        	<if test="cronExpression != null">cron_expression = #{cronExpression}, </if>
+        	<if test="concurrent != null">concurrent = #{concurrent}, </if>
+        	<if test="remark != null">remark = #{remark}, </if>
+        	<if test="status != null">status = #{status}, </if>
+        	<if test="deleted != null">deleted = #{deleted}, </if>
+        	<if test="createBy != null">create_by = #{createBy}, </if>
+        	<if test="createDate != null">create_date = #{createDate}, </if>
+        	<if test="updateBy != null">update_by = #{updateBy}, </if>
+        	<if test="updateDate != null">update_date = #{updateDate}, </if>
+	    </set>
+    	where id = #{id, jdbcType=INTEGER}
+ 	</update>
+ 	
+  	<update id="updateByPrimaryKey" parameterType="com.platform.task.model.SysScheduleJob">
+    	update sys_t_schedule_job
+    	<set>
+		    job_name = #{jobName},
+		    bean_name = #{beanName},
+		    class_name = #{className},
+			method_name = #{methodName},
+		    cron_expression = #{cronExpression},
+		    concurrent = #{concurrent},
+		    remark = #{remark},
+		    status = #{status},
+		    deleted = #{deleted},
+		    create_by = #{createBy},
+		    create_date = #{createDate},
+		    update_by = #{updateBy},
+		    update_date = #{updateDate}
+		</set>
+    	where id = #{id, jdbcType=INTEGER}
+  	</update>
+  	
+	<!-- 修改定时任务状态  -->
+	<update id="updateJobStatus" parameterType="com.platform.task.model.SysScheduleJob">
+		update sys_t_schedule_job
+		<set>
+			status = #{status}
+		</set>
+		where id = #{id}
+	</update>
+
+</mapper>

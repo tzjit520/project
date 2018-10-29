@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.item.mapper.ItemMapper">
+
+	<resultMap id="BaseResultMap" type="com.jtgl.item.model.Item">
+		<id column="id" jdbcType="INTEGER" property="id" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="item_alias" jdbcType="VARCHAR" property="itemAlias" />
+        <result column="item_type_id" jdbcType="INTEGER" property="itemTypeId" />
+        <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+        <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+        <result column="uom" jdbcType="VARCHAR" property="uom" />
+        <result column="list_price" jdbcType="FLOAT" property="listPrice" />
+        <result column="selling_price" jdbcType="FLOAT" property="sellingPrice" />
+        <result column="pic_location" jdbcType="VARCHAR" property="picLocation" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="deleted" jdbcType="INTEGER" property="deleted" />
+        <result column="create_by" jdbcType="BIGINT" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+        
+        <!-- 产品类型对象 -->
+        <association property="itemType" javaType="com.jtgl.item.model.ItemType" >
+            <id property="id" column="item_type_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <result property="name" column="item_type_name" jdbcType="VARCHAR"/>
+        </association>
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id,
+		code,
+		name,
+		item_alias,
+		item_type_id,
+		start_date,
+		end_date,
+		uom,
+		list_price,
+		selling_price,
+		pic_location,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		item.id,
+		item.code,
+		item.name,
+		item.item_alias,
+		item.item_type_id,
+		item.start_date,
+		item.end_date,
+		item.uom,
+		item.list_price,
+		item.selling_price,
+		item.pic_location,
+		item.remark,
+		item.status,
+		item.deleted,
+		item.create_by,
+		item.create_date,
+		item.update_by,
+		item.update_date
+  	</sql>
+  
+  	<sql id="Base_Join_Column_List">
+  		itemType.id as item_type_id,
+  		itemType.name as item_type_name
+  	</sql>
+  	
+  	<sql id="Base_Join_Tables">
+  		left join t_item_type itemType on itemType.id = item.item_type_id
+  	</sql>
+  	
+ 	 <!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" />  
+    	from 
+    		t_item item
+    		<include refid="Base_Join_Tables" /> 
+    	where 
+    		item.id = #{id, jdbcType=INTEGER}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="com.jtgl.item.model.Item" resultMap="BaseResultMap">
+   		select 
+   			<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" /> 	
+   		from 
+   			t_item item
+   			<include refid="Base_Join_Tables" /> 
+    	where 
+    		1 = 1 and item.deleted = 0
+		<if test="code != null">
+			AND item.code like CONCAT('%',#{code},'%')
+		</if>
+		<if test="name != null">
+			AND item.name like CONCAT('%',#{name},'%')
+		</if>
+		<if test="itemTypeId != null">
+			AND item.item_type_id like CONCAT('%',#{itemTypeId},'%')
+		</if>
+  	</select>
+  
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="com.jtgl.item.model.Item" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" />
+   		from 
+    		t_item item
+    	where 
+    		1 = 1 and deleted = 0
+    	<if test="name != null">
+        	AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from t_item where id = #{id, jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update t_item set deleted = 1 where id = #{id, jdbcType=INTEGER}
+  	</update>
+  
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="com.jtgl.item.model.Item">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_item (
+			id,
+			code,
+			name,
+			item_alias,
+			item_type_id,
+			start_date,
+			end_date,
+			uom,
+			list_price,
+			selling_price,
+			pic_location,
+			remark,
+			status,
+			deleted,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		)
+		values (
+			#{id, jdbcType=INTEGER},
+			#{code, jdbcType=VARCHAR},
+			#{name, jdbcType=VARCHAR},
+			#{itemAlias, jdbcType=VARCHAR},
+			#{itemTypeId, jdbcType=INTEGER},
+			#{startDate, jdbcType=TIMESTAMP},
+			#{endDate, jdbcType=TIMESTAMP},
+			#{uom, jdbcType=VARCHAR},
+			#{listPrice, jdbcType=FLOAT},
+			#{sellingPrice, jdbcType=FLOAT},
+			#{picLocation, jdbcType=VARCHAR},
+			#{remark, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{deleted, jdbcType=INTEGER},
+			#{createBy, jdbcType=BIGINT},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{updateBy, jdbcType=BIGINT},
+			#{updateDate, jdbcType=TIMESTAMP}
+		)
+  	</insert>
+  	
+  	<insert id="insertSelective" parameterType="com.jtgl.item.model.Item">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_item
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="code != null">code, </if>
+			<if test="name != null">name, </if>
+			<if test="itemAlias != null">item_alias, </if>
+			<if test="itemTypeId != null">item_type_id, </if>
+			<if test="startDate != null">start_date, </if>
+			<if test="endDate != null">end_date, </if>
+			<if test="uom != null">uom, </if>
+			<if test="listPrice != null">list_price, </if>
+			<if test="sellingPrice != null">selling_price, </if>
+			<if test="picLocation != null">pic_location, </if>
+			<if test="remark != null">remark, </if>
+			<if test="status != null">status, </if>
+			<if test="deleted != null">deleted, </if>
+			<if test="createBy != null">create_by, </if>
+			<if test="createDate != null">create_date, </if>
+			<if test="updateBy != null">update_by, </if>
+			<if test="updateDate != null">update_date, </if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id, jdbcType=INTEGER}, </if>
+			<if test="code != null">#{code, jdbcType=VARCHAR}, </if>
+			<if test="name != null">#{name, jdbcType=VARCHAR}, </if>
+			<if test="itemAlias != null">#{itemAlias, jdbcType=VARCHAR}, </if>
+			<if test="itemTypeId != null">#{itemTypeId, jdbcType=INTEGER}, </if>
+			<if test="startDate != null">#{startDate, jdbcType=TIMESTAMP}, </if>
+			<if test="endDate != null">#{endDate, jdbcType=TIMESTAMP}, </if>
+			<if test="uom != null">#{uom, jdbcType=VARCHAR}, </if>
+			<if test="listPrice != null">#{listPrice, jdbcType=FLOAT}, </if>
+			<if test="sellingPrice != null">#{sellingPrice, jdbcType=FLOAT}, </if>
+			<if test="picLocation != null">#{picLocation, jdbcType=VARCHAR}, </if>
+			<if test="remark != null">#{remark, jdbcType=VARCHAR}, </if>
+			<if test="status != null">#{status, jdbcType=INTEGER}, </if>
+			<if test="deleted != null">#{deleted, jdbcType=INTEGER}, </if>
+			<if test="createBy != null">#{createBy, jdbcType=BIGINT}, </if>
+			<if test="createDate != null">#{createDate, jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">#{updateBy, jdbcType=BIGINT}, </if>
+			<if test="updateDate != null">#{updateDate, jdbcType=TIMESTAMP}, </if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="com.jtgl.item.model.Item">
+    	update t_item
+		<set>
+        	<if test="code != null">code = #{code, jdbcType=VARCHAR}, </if>
+        	<if test="name != null">name = #{name, jdbcType=VARCHAR}, </if>
+        	<if test="itemAlias != null">item_alias = #{itemAlias, jdbcType=VARCHAR}, </if>
+        	<if test="itemTypeId != null">item_type_id = #{itemTypeId, jdbcType=INTEGER}, </if>
+        	<if test="startDate != null">start_date = #{startDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="endDate != null">end_date = #{endDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="uom != null">uom = #{uom, jdbcType=VARCHAR}, </if>
+        	<if test="listPrice != null">list_price = #{listPrice, jdbcType=FLOAT}, </if>
+        	<if test="sellingPrice != null">selling_price = #{sellingPrice, jdbcType=FLOAT}, </if>
+        	<if test="picLocation != null">pic_location = #{picLocation, jdbcType=VARCHAR}, </if>
+        	<if test="remark != null">remark = #{remark, jdbcType=VARCHAR}, </if>
+        	<if test="status != null">status = #{status, jdbcType=INTEGER}, </if>
+        	<if test="deleted != null">deleted = #{deleted, jdbcType=INTEGER}, </if>
+        	<if test="createBy != null">create_by = #{createBy, jdbcType=BIGINT}, </if>
+        	<if test="createDate != null">create_date = #{createDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="updateBy != null">update_by = #{updateBy, jdbcType=BIGINT}, </if>
+        	<if test="updateDate != null">update_date = #{updateDate, jdbcType=TIMESTAMP}, </if>
+	    </set>
+    	where id = #{id, jdbcType=INTEGER}
+ 	</update>
+ 	
+  	<update id="updateByPrimaryKey" parameterType="com.jtgl.item.model.Item">
+    	update t_item
+    	<set>
+		    code = #{code, jdbcType=VARCHAR},
+		    name = #{name, jdbcType=VARCHAR},
+		    item_alias = #{itemAlias, jdbcType=VARCHAR},
+		    item_type_id = #{itemTypeId, jdbcType=INTEGER},
+		    start_date = #{startDate, jdbcType=TIMESTAMP},
+		    end_date = #{endDate, jdbcType=TIMESTAMP},
+		    uom = #{uom, jdbcType=VARCHAR},
+		    list_price = #{listPrice, jdbcType=FLOAT},
+		    selling_price = #{sellingPrice, jdbcType=FLOAT},
+		    pic_location = #{picLocation, jdbcType=VARCHAR},
+		    remark = #{remark, jdbcType=VARCHAR},
+		    status = #{status, jdbcType=INTEGER},
+		    deleted = #{deleted, jdbcType=INTEGER},
+		    create_by = #{createBy, jdbcType=BIGINT},
+		    create_date = #{createDate, jdbcType=TIMESTAMP},
+		    update_by = #{updateBy, jdbcType=BIGINT},
+		    update_date = #{updateDate, jdbcType=TIMESTAMP}
+		</set>
+    	where id = #{id, jdbcType=INTEGER}
+  </update>
+
+</mapper>

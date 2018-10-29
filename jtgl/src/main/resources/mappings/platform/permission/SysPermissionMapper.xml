@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.system.permission.mapper.SysPermissionMapper">
+
+	<resultMap id="BaseResultMap" type="com.platform.system.permission.model.SysPermission">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="resource_id" jdbcType="VARCHAR" property="resourceId" />
+		<result column="operation_id" jdbcType="VARCHAR" property="operationId" />
+		<result column="permission" jdbcType="VARCHAR" property="permission" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="status" jdbcType="SMALLINT" property="status" />
+		<result column="deleted" jdbcType="INTEGER" property="deleted" />
+		<result column="create_by" jdbcType="INTEGER" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="update_by" jdbcType="INTEGER" property="updateBy" />
+		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+
+		<result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+		<result column="resource_code" jdbcType="VARCHAR" property="resourceCode" />
+		<result column="operation_name" jdbcType="VARCHAR" property="operationName" />
+		<result column="operation_code" jdbcType="VARCHAR" property="operationCode" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, resource_id, operation_id, status, deleted, remark, create_by, create_date, update_by, update_date
+	</sql>
+	
+	<sql id="Base_Column_List_Alias">
+		permission.id, permission.resource_id, permission.operation_id, permission.status, permission.deleted,
+		permission.remark, permission.create_by, permission.create_date, permission.update_by, permission.update_date
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_t_permission
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectByProperties" parameterType="com.platform.system.permission.model.SysPermission"
+		resultMap="BaseResultMap">
+		select DISTINCT
+			<include refid="Base_Column_List_Alias" />
+			,resource.name as resource_name,resource.code as resource_code,
+			operation.name as operation_name,operation.code as operation_code,
+			concat(resource.code,':',operation.code) as permission
+		from 
+			sys_t_permission permission 
+			left join sys_t_resource resource on resource.id = permission.resource_id 
+			left join sys_t_operation operation on operation.id = permission.operation_id
+		where 1=1
+		<if test="resourceName != null">
+			AND resource.name like '%${resourceName}%'
+		</if>
+		<if test="operationName != null">
+			AND operation.name like '%${operationName}%'
+		</if>
+		<if test="resourceId != null">
+			AND permission.resource_id = '${resourceId}'
+		</if>
+		<if test="roleId != null">
+			AND rp.role_id = '${roleId}'
+		</if>
+		order by permission.create_date desc
+	</select>
+	
+    <select id="selectByUnique" parameterType="com.platform.system.permission.model.SysPermission" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from sys_t_permission
+        where 1=1
+        <if test="name != null">
+            AND name = '${name}'
+        </if>
+        <if test="code != null">
+            AND code = '${code}'
+        </if>
+        <if test="id != null">
+            AND id = '${id}'
+        </if>
+    </select>
+    
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_t_permission
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insert" parameterType="com.platform.system.permission.model.SysPermission">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_t_permission (
+			id, resource_id, operation_id, status, remark, deleted,
+			create_by, create_date, update_by, update_date)
+		values (
+			#{id,jdbcType=INTEGER}, #{resourceId,jdbcType=VARCHAR}, #{operationId,jdbcType=VARCHAR},
+			#{status,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, #{deleted,jdbcType=INTEGER},
+			#{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER},
+			#{updateDate,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<insert id="insertSelective" parameterType="com.platform.system.permission.model.SysPermission">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into sys_t_permission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="resourceId != null">
+				resource_id,
+			</if>
+			<if test="operationId != null">
+				operation_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="deleted != null">
+				deleted,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="resourceId != null">
+				#{resourceId,jdbcType=VARCHAR},
+			</if>
+			<if test="operationId != null">
+				#{operationId,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=SMALLINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="deleted != null">
+				#{deleted,jdbcType=VARCHAR},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.platform.system.permission.model.SysPermission">
+		update sys_t_permission
+		<set>
+			<if test="resourceId != null">
+				resource_id = #{resourceId,jdbcType=VARCHAR},
+			</if>
+			<if test="operationId != null">
+				operation_id = #{operationId,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=SMALLINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="deleted != null">
+				deleted = #{deleted,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=INTEGER},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				update_by = #{updateBy,jdbcType=INTEGER},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateByPrimaryKey" parameterType="com.platform.system.permission.model.SysPermission">
+		update sys_t_permission set 
+			resource_id = #{resourceId,jdbcType=VARCHAR},
+			operation_id = #{operationId,jdbcType=VARCHAR},
+			status = #{status,jdbcType=SMALLINT},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted = #{deleted,jdbcType=INTEGER},
+			create_by = #{createBy,jdbcType=INTEGER},
+			create_date = #{createDate,jdbcType=TIMESTAMP},
+			update_by = #{updateBy,jdbcType=INTEGER},
+			update_date = #{updateDate,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

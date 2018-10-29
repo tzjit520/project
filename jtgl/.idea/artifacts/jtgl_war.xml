@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="jtgl:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="jtgl.war">
+      <element id="artifact" artifact-name="jtgl:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,94 @@
+body, img, div {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html body {
+    color: #CD3278;
+    font-size: 18px;
+    font-family: "Microsoft YaHei";
+    background:#d3e9ec;
+    background-size:cover;
+}
+
+  	.draw_left{
+  		position: absolute;
+  		left: 3%;
+  		top: 5%;
+  		width: 200px;
+  		height: 400px;
+  	}
+  	.draw_right{
+  		position: absolute;
+  		right: 2%;
+  		top: 5%;
+  		width: 420px;
+  		height: 400px;
+  	}
+  	
+  	::-webkit-scrollbar {
+	width: 6px;
+	height: 4px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #b2b1b1;
+	border-radius: 50px;
+	background-clip: padding-box;
+	min-height: 28px;
+}
+
+  	.draw_bottom{
+  		position: absolute;
+  		bottom: 25%;
+  		font-size:30px;
+  		margin-left:300px;
+  	}
+  	
+  	/* 大转盘样式 */
+.banner {
+    display: block;
+    margin-left: 300px;
+    margin-top: 20px;
+}
+
+.banner .turnplate {
+    display: block;
+    width: 35%;
+    position: relative;
+}
+
+.banner .turnplate canvas.item {
+    width: 100%;
+}
+
+.banner .turnplate img.pointer {
+    position: absolute;
+    width: 34%;
+    left: 33%;
+    top: 25%;
+}
+
+img {
+    vertical-align: middle;
+}
+
+input {
+    font-size: 12px;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a:hover {
+    color: #c00;
+    text-decoration: none;
+}
+
+input::-webkit-input-placeholder{color:#808080;}
+input::-moz-placeholder{color:#808080;opacity:1;}
+input:-moz-placeholder{color:#808080;opacity:1;}
+select{appearance:none;-moz-appearance:none;-webkit-appearance:none;background:#fff url(../images/select.jpg) right center no-repeat;padding-right: 10%;padding-left: 2%;}
+select::-ms-expand { display: none; }

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.customer.mapper.CustomerAddressMapper">
+
+	<resultMap id="BaseResultMap" type="com.jtgl.customer.model.CustomerAddress">
+		<id column="id" jdbcType="INTEGER" property="id" />
+       	<result column="customer_id" jdbcType="INTEGER" property="customerId" />
+       	<result column="province" jdbcType="VARCHAR" property="province" />
+       	<result column="city" jdbcType="VARCHAR" property="city" />
+       	<result column="county" jdbcType="VARCHAR" property="county" />
+       	<result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+       	<result column="postal" jdbcType="VARCHAR" property="postal" />
+       	<result column="address" jdbcType="VARCHAR" property="address" />
+       	<result column="remark" jdbcType="VARCHAR" property="remark" />
+       	<result column="status" jdbcType="INTEGER" property="status" />
+       	<result column="deleted" jdbcType="INTEGER" property="deleted" />
+       	<result column="create_by" jdbcType="BIGINT" property="createBy" />
+       	<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+       	<result column="update_by" jdbcType="BIGINT" property="updateBy" />
+       	<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+       	
+       	<!-- 客户对象 -->
+        <association property="customer" javaType="com.jtgl.customer.model.Customer" >
+            <id property="id" column="cust_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <result property="code" column="cust_code" jdbcType="VARCHAR"/>
+            <result property="name" column="cust_name" jdbcType="VARCHAR"/>
+        </association>
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id,
+		customer_id,
+		province,
+		city,
+		county,
+		area_code,
+		postal,
+		address,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		customerAddress.id,
+		customerAddress.customer_id,
+		customerAddress.province,
+		customerAddress.city,
+		customerAddress.county,
+		customerAddress.area_code,
+		customerAddress.postal,
+		customerAddress.address,
+		customerAddress.remark,
+		customerAddress.status,
+		customerAddress.deleted,
+		customerAddress.create_by,
+		customerAddress.create_date,
+		customerAddress.update_by,
+		customerAddress.update_date
+  	</sql>
+  	
+  	<sql id="Base_Join_Column_List">
+  		customer.id as cust_id,
+  		customer.code as cust_code,
+  		customer.name as cust_name
+  	</sql>
+  	
+  	<sql id="Base_Join_Tables">
+  		left join t_customer customer on customer.id = customerAddress.customer_id
+  	</sql>
+  	
+ 	<!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" /> 
+    	from 
+    		t_customer_address customerAddress
+    		<include refid="Base_Join_Tables" /> 
+    	where 
+    		customerAddress.id = #{id, jdbcType=INTEGER}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="com.jtgl.customer.model.CustomerAddress" resultMap="BaseResultMap">
+   		select 
+   			<include refid="Base_Column_List_Alias" />,
+    		<include refid="Base_Join_Column_List" /> 	
+   		from 
+   			t_customer_address customerAddress
+   			<include refid="Base_Join_Tables" /> 
+    	where 
+    		1 = 1 and customerAddress.deleted = 0
+		<if test="customerId != null">
+			AND customerAddress.customer_id = #{customerId}
+		</if>
+  	</select>
+  
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="com.jtgl.customer.model.CustomerAddress" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" />
+		from 
+			t_customer_address customerAddress
+    	where 
+    		1 = 1 and deleted = 0
+    	<if test="name != null">
+        	AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from t_customer_address where id = #{id, jdbcType=INTEGER}
+  	</delete>
+  	
+  	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update t_customer_address set deleted = 1 where id = #{id, jdbcType=INTEGER}
+  	</update>
+  
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="com.jtgl.customer.model.CustomerAddress">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_customer_address (
+			id,
+			customer_id,
+			province,
+			city,
+			county,
+			area_code,
+			postal,
+			address,
+			remark,
+			status,
+			deleted,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		)
+		values (
+			#{id, jdbcType=INTEGER},
+			#{customerId, jdbcType=INTEGER},
+			#{province, jdbcType=VARCHAR},
+			#{city, jdbcType=VARCHAR},
+			#{county, jdbcType=VARCHAR},
+			#{areaCode, jdbcType=VARCHAR},
+			#{postal, jdbcType=VARCHAR},
+			#{address, jdbcType=VARCHAR},
+			#{remark, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{deleted, jdbcType=INTEGER},
+			#{createBy, jdbcType=BIGINT},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{updateBy, jdbcType=BIGINT},
+			#{updateDate, jdbcType=TIMESTAMP}
+		)
+  	</insert>
+  	
+  	<insert id="insertSelective" parameterType="com.jtgl.customer.model.CustomerAddress">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into t_customer_address
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="customerId != null">customer_id, </if>
+			<if test="province != null">province, </if>
+			<if test="city != null">city, </if>
+			<if test="county != null">county, </if>
+			<if test="areaCode != null">area_code, </if>
+			<if test="postal != null">postal, </if>
+			<if test="address != null">address, </if>
+			<if test="remark != null">remark, </if>
+			<if test="status != null">status, </if>
+			<if test="deleted != null">deleted, </if>
+			<if test="createBy != null">create_by, </if>
+			<if test="createDate != null">create_date, </if>
+			<if test="updateBy != null">update_by, </if>
+			<if test="updateDate != null">update_date, </if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id, jdbcType=INTEGER}, </if>
+			<if test="customerId != null">#{customerId, jdbcType=INTEGER}, </if>
+			<if test="province != null">#{province, jdbcType=VARCHAR}, </if>
+			<if test="city != null">#{city, jdbcType=VARCHAR}, </if>
+			<if test="county != null">#{county, jdbcType=VARCHAR}, </if>
+			<if test="areaCode != null">#{areaCode, jdbcType=VARCHAR}, </if>
+			<if test="postal != null">#{postal, jdbcType=VARCHAR}, </if>
+			<if test="address != null">#{address, jdbcType=VARCHAR}, </if>
+			<if test="remark != null">#{remark, jdbcType=VARCHAR}, </if>
+			<if test="status != null">#{status, jdbcType=INTEGER}, </if>
+			<if test="deleted != null">#{deleted, jdbcType=INTEGER}, </if>
+			<if test="createBy != null">#{createBy, jdbcType=BIGINT}, </if>
+			<if test="createDate != null">#{createDate, jdbcType=TIMESTAMP}, </if>
+			<if test="updateBy != null">#{updateBy, jdbcType=BIGINT}, </if>
+			<if test="updateDate != null">#{updateDate, jdbcType=TIMESTAMP}, </if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="com.jtgl.customer.model.CustomerAddress">
+    	update t_customer_address
+		<set>
+        	<if test="customerId != null">customer_id = #{customerId, jdbcType=INTEGER}, </if>
+        	<if test="province != null">province = #{province, jdbcType=VARCHAR}, </if>
+        	<if test="city != null">city = #{city, jdbcType=VARCHAR}, </if>
+        	<if test="county != null">county = #{county, jdbcType=VARCHAR}, </if>
+        	<if test="areaCode != null">area_code = #{areaCode, jdbcType=VARCHAR}, </if>
+        	<if test="postal != null">postal = #{postal, jdbcType=VARCHAR}, </if>
+        	<if test="address != null">address = #{address, jdbcType=VARCHAR}, </if>
+        	<if test="remark != null">remark = #{remark, jdbcType=VARCHAR}, </if>
+        	<if test="status != null">status = #{status, jdbcType=INTEGER}, </if>
+        	<if test="deleted != null">deleted = #{deleted, jdbcType=INTEGER}, </if>
+        	<if test="createBy != null">create_by = #{createBy, jdbcType=BIGINT}, </if>
+        	<if test="createDate != null">create_date = #{createDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="updateBy != null">update_by = #{updateBy, jdbcType=BIGINT}, </if>
+        	<if test="updateDate != null">update_date = #{updateDate, jdbcType=TIMESTAMP}, </if>
+	    </set>
+    	where id = #{id, jdbcType=INTEGER}
+ 	</update>
+ 	
+  	<update id="updateByPrimaryKey" parameterType="com.jtgl.customer.model.CustomerAddress">
+    	update t_customer_address
+    	<set>
+		    customer_id = #{customerId, jdbcType=INTEGER},
+		    province = #{province, jdbcType=VARCHAR},
+		    city = #{city, jdbcType=VARCHAR},
+		    county = #{county, jdbcType=VARCHAR},
+		    area_code = #{areaCode, jdbcType=VARCHAR},
+		    postal = #{postal, jdbcType=VARCHAR},
+		    address = #{address, jdbcType=VARCHAR},
+		    remark = #{remark, jdbcType=VARCHAR},
+		    status = #{status, jdbcType=INTEGER},
+		    deleted = #{deleted, jdbcType=INTEGER},
+		    create_by = #{createBy, jdbcType=BIGINT},
+		    create_date = #{createDate, jdbcType=TIMESTAMP},
+		    update_by = #{updateBy, jdbcType=BIGINT},
+		    update_date = #{updateDate, jdbcType=TIMESTAMP}
+		</set>
+    	where id = #{id, jdbcType=INTEGER}
+  </update>
+
+</mapper>

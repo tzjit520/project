@@ -1,0 +1,52 @@
+8
+
+dir
+81
+http://10.128.138.100/svn/zxxz/code/trunks/zxxz/src/com/dj/sys/utils/ftp
+http://10.128.138.100/svn/zxxz
+
+
+
+2018-05-08T01:40:01.121983Z
+39
+wang_as
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d994d5d3-334f-d348-bfc6-44e13e52fbe7
+
+FtpUtil.java
+file
+
+
+
+
+2018-06-20T05:54:51.684749Z
+66f1d54f78a09ab558907b497bcd76ae
+2018-05-08T01:40:01.121983Z
+39
+wang_as
+
+SFtpUtil.java
+file
+
+
+
+
+2018-06-20T05:54:51.691750Z
+0b159f28579e1d8935238f3fed72179a
+2018-05-08T01:40:01.121983Z
+39
+wang_as
+

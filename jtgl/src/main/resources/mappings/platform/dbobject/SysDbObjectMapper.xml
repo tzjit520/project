@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.platform.system.dbobject.mapper.SysDbObjectMapper">
+    <resultMap id="BaseResultMap" type="com.platform.system.dbobject.model.SysDbObject">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="procedure_name" jdbcType="VARCHAR" property="procedureName"/>
+        <result column="sys_module" jdbcType="VARCHAR" property="sysModule"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="deleted" jdbcType="INTEGER" property="deleted"/>
+        <result column="create_by" jdbcType="INTEGER" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_by" jdbcType="INTEGER" property="updateBy"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+    
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.platform.system.dbobject.model.SysDbObject">
+        <result column="sql_statements" jdbcType="LONGVARCHAR" property="sqlStatements"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, code, name, procedure_name, sys_module, 
+        status, deleted, create_by, create_date, update_by, update_date
+    </sql>
+    
+    <sql id="Blob_Column_List">
+        sql_statements
+    </sql>
+    
+    <sql id="Base_Column_List_Alias">
+        db.id, db.code, db.name, db.procedure_name, db.sys_module, 
+        db.status, db.deleted, db.create_by, db.create_date, db.update_by, db.update_date
+    </sql>
+    
+    <sql id="Blob_Column_List_Alias">
+        db.sql_statements
+    </sql>
+    
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from sys_t_db_object
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <select id="selectByProperties" parameterType="com.platform.system.dbobject.model.SysDbObject" resultMap="ResultMapWithBLOBs">
+        select 
+        	<include refid="Base_Column_List_Alias"/>, 
+        	<include refid="Blob_Column_List_Alias"/>
+        from 
+        	sys_t_db_object db
+        where 
+        	1 = 1 and db.deleted = 0
+        <if test="name != null">
+            AND db.name like CONCAT('%',#{name},'%' )
+        </if>
+        <if test="code != null">
+            AND db.code like CONCAT('%',#{code},'%' )
+        </if>
+        order by db.create_date desc
+    </select>
+    
+    <select id="selectByCode" parameterType="com.platform.system.dbobject.model.SysDbObject" resultMap="ResultMapWithBLOBs">
+        select 
+        	<include refid="Base_Column_List_Alias"/>, <include refid="Blob_Column_List_Alias"/>
+        from 
+        	sys_t_db_object db
+        where 
+        	1 = 1 and db.deleted = 0
+        <if test="code != null">
+            AND db.code = #{code}
+        </if>
+        order by db.create_date desc
+    </select>
+    
+    <select id="selectByUnique" parameterType="com.platform.system.dbobject.model.SysDbObject" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from sys_t_db_object
+        where 1=1 and deleted = 0
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="code != null">
+            AND code = #{code}
+        </if>
+    </select>
+    
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from sys_t_db_object
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    
+    <delete id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+        update sys_t_db_object set deleted = 1
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    
+    <insert id="insert" parameterType="com.platform.system.dbobject.model.SysDbObject">
+        insert into sys_t_db_object (id, code, name,
+        procedure_name, sys_module, status, deleted,
+        create_by, create_date, update_by,
+        update_date, sql_statements)
+        values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+        #{procedureName,jdbcType=VARCHAR}, #{sysModule,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{deleted,jdbcType=INTEGER},
+        #{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER},
+        #{updateDate,jdbcType=TIMESTAMP}, #{sqlStatements,jdbcType=LONGVARCHAR})
+    </insert>
+    
+    <insert id="insertSelective" parameterType="com.platform.system.dbobject.model.SysDbObject">
+        insert into sys_t_db_object
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="procedureName != null">
+                procedure_name,
+            </if>
+            <if test="sysModule != null">
+                sys_module,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="sqlStatements != null">
+                sql_statements,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="procedureName != null">
+                #{procedureName,jdbcType=VARCHAR},
+            </if>
+            <if test="sysModule != null">
+                #{sysModule,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=INTEGER},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sqlStatements != null">
+                #{sqlStatements,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateByPrimaryKeySelective" parameterType="com.platform.system.dbobject.model.SysDbObject">
+        update sys_t_db_object
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="procedureName != null">
+                procedure_name = #{procedureName,jdbcType=VARCHAR},
+            </if>
+            <if test="sysModule != null">
+                sys_module = #{sysModule,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=INTEGER},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sqlStatements != null">
+                sql_statements = #{sqlStatements,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.platform.system.dbobject.model.SysDbObject">
+        update sys_t_db_object
+        set code = #{code,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        procedure_name = #{procedureName,jdbcType=VARCHAR},
+        sys_module = #{sysModule,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        deleted = #{deleted,jdbcType=INTEGER},
+        create_by = #{createBy,jdbcType=INTEGER},
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+        update_by = #{updateBy,jdbcType=INTEGER},
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+        sql_statements = #{sqlStatements,jdbcType=LONGVARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <update id="updateByPrimaryKey" parameterType="com.platform.system.dbobject.model.SysDbObject">
+        update sys_t_db_object
+        set code = #{code,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        procedure_name = #{procedureName,jdbcType=VARCHAR},
+        sys_module = #{sysModule,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        deleted = #{deleted,jdbcType=INTEGER},
+        create_by = #{createBy,jdbcType=INTEGER},
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+        update_by = #{updateBy,jdbcType=INTEGER},
+        update_date = #{updateDate,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

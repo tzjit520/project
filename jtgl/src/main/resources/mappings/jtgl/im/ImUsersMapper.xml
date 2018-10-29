@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.im.mapper.ImUsersMapper">
+
+	<resultMap id="BaseResultMap" type="com.jtgl.im.model.ImUsers">
+		<id column="id" jdbcType="BIGINT" property="id" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="age" jdbcType="INTEGER" property="age" />
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+        <result column="tele_phone" jdbcType="VARCHAR" property="telePhone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+        <result column="signa_ture" jdbcType="VARCHAR" property="signaTure" />
+        <result column="intro" jdbcType="VARCHAR" property="intro" />
+        <result column="zodiac" jdbcType="VARCHAR" property="zodiac" />
+        <result column="constellation" jdbcType="VARCHAR" property="constellation" />
+        <result column="blood_type" jdbcType="VARCHAR" property="bloodType" />
+        <result column="school_tag" jdbcType="VARCHAR" property="schoolTag" />
+        <result column="vocation" jdbcType="VARCHAR" property="vocation" />
+        <result column="nation" jdbcType="VARCHAR" property="nation" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="county" jdbcType="VARCHAR" property="county" />
+        <result column="friend_ship_policy" jdbcType="VARCHAR" property="friendShipPolicy" />
+        <result column="friend_policy_question" jdbcType="VARCHAR" property="friendPolicyQuestion" />
+        <result column="friend_policy_answer" jdbcType="VARCHAR" property="friendPolicyAnswer" />
+        <result column="friend_policy_password" jdbcType="VARCHAR" property="friendPolicyPassword" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="deleted" jdbcType="INTEGER" property="deleted" />
+        <result column="create_by" jdbcType="BIGINT" property="createBy" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id,
+		code,
+		nick_name,
+		name,
+		password,
+		sex,
+		age,
+		birthday,
+		tele_phone,
+		email,
+		head_img,
+		signa_ture,
+		intro,
+		zodiac,
+		constellation,
+		blood_type,
+		school_tag,
+		vocation,
+		nation,
+		province,
+		city,
+		county,
+		friend_ship_policy,
+		friend_policy_question,
+		friend_policy_answer,
+		friend_policy_password,
+		remark,
+		status,
+		deleted,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		imUsers.id,
+		imUsers.code,
+		imUsers.nick_name,
+		imUsers.name,
+		imUsers.password,
+		imUsers.sex,
+		imUsers.age,
+		imUsers.birthday,
+		imUsers.tele_phone,
+		imUsers.email,
+		imUsers.head_img,
+		imUsers.signa_ture,
+		imUsers.intro,
+		imUsers.zodiac,
+		imUsers.constellation,
+		imUsers.blood_type,
+		imUsers.school_tag,
+		imUsers.vocation,
+		imUsers.nation,
+		imUsers.province,
+		imUsers.city,
+		imUsers.county,
+		imUsers.friend_ship_policy,
+		imUsers.friend_policy_question,
+		imUsers.friend_policy_answer,
+		imUsers.friend_policy_password,
+		imUsers.remark,
+		imUsers.status,
+		imUsers.deleted,
+		imUsers.create_by,
+		imUsers.create_date,
+		imUsers.update_by,
+		imUsers.update_date
+  	</sql>
+  
+ 	 <!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select <include refid="Base_Column_List" /> from im_t_users
+    	where id = #{id, jdbcType=INTEGER}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="com.jtgl.im.model.ImUsers" resultMap="BaseResultMap">
+   		select <include refid="Base_Column_List_Alias" />	from im_t_users imUsers
+    	where 1=1 and imUsers.deleted = 0
+	<if test="id != null">
+		AND imUsers.id = #{id}
+	</if>
+	<if test="code != null">
+		AND imUsers.code like CONCAT('%',#{code},'%')
+	</if>
+	<if test="nickName != null">
+		AND imUsers.nick_name like CONCAT('%',#{nickName},'%')
+	</if>
+	<if test="name != null">
+		AND imUsers.name like CONCAT('%',#{name},'%')
+	</if>
+	<if test="password != null">
+		AND imUsers.password like CONCAT('%',#{password},'%')
+	</if>
+	<if test="sex != null">
+		AND imUsers.sex like CONCAT('%',#{sex},'%')
+	</if>
+	<if test="age != null">
+		AND imUsers.age = #{age}
+	</if>
+	<if test="birthday != null">
+		AND imUsers.birthday = #{birthday}
+	</if>
+	<if test="telePhone != null">
+		AND imUsers.tele_phone like CONCAT('%',#{telePhone},'%')
+	</if>
+	<if test="email != null">
+		AND imUsers.email like CONCAT('%',#{email},'%')
+	</if>
+	<if test="headImg != null">
+		AND imUsers.head_img like CONCAT('%',#{headImg},'%')
+	</if>
+	<if test="signaTure != null">
+		AND imUsers.signa_ture like CONCAT('%',#{signaTure},'%')
+	</if>
+	<if test="intro != null">
+		AND imUsers.intro like CONCAT('%',#{intro},'%')
+	</if>
+	<if test="zodiac != null">
+		AND imUsers.zodiac like CONCAT('%',#{zodiac},'%')
+	</if>
+	<if test="constellation != null">
+		AND imUsers.constellation like CONCAT('%',#{constellation},'%')
+	</if>
+	<if test="bloodType != null">
+		AND imUsers.blood_type like CONCAT('%',#{bloodType},'%')
+	</if>
+	<if test="schoolTag != null">
+		AND imUsers.school_tag like CONCAT('%',#{schoolTag},'%')
+	</if>
+	<if test="vocation != null">
+		AND imUsers.vocation like CONCAT('%',#{vocation},'%')
+	</if>
+	<if test="nation != null">
+		AND imUsers.nation like CONCAT('%',#{nation},'%')
+	</if>
+	<if test="province != null">
+		AND imUsers.province like CONCAT('%',#{province},'%')
+	</if>
+	<if test="city != null">
+		AND imUsers.city like CONCAT('%',#{city},'%')
+	</if>
+	<if test="county != null">
+		AND imUsers.county like CONCAT('%',#{county},'%')
+	</if>
+	<if test="friendShipPolicy != null">
+		AND imUsers.friend_ship_policy like CONCAT('%',#{friendShipPolicy},'%')
+	</if>
+	<if test="friendPolicyQuestion != null">
+		AND imUsers.friend_policy_question like CONCAT('%',#{friendPolicyQuestion},'%')
+	</if>
+	<if test="friendPolicyAnswer != null">
+		AND imUsers.friend_policy_answer like CONCAT('%',#{friendPolicyAnswer},'%')
+	</if>
+	<if test="friendPolicyPassword != null">
+		AND imUsers.friend_policy_password like CONCAT('%',#{friendPolicyPassword},'%')
+	</if>
+	<if test="remark != null">
+		AND imUsers.remark like CONCAT('%',#{remark},'%')
+	</if>
+	<if test="status != null">
+		AND imUsers.status = #{status}
+	</if>
+	<if test="deleted != null">
+		AND imUsers.deleted = #{deleted}
+	</if>
+	<if test="createBy != null">
+		AND imUsers.create_by = #{createBy}
+	</if>
+	<if test="createDate != null">
+		AND imUsers.create_date = #{createDate}
+	</if>
+	<if test="updateBy != null">
+		AND imUsers.update_by = #{updateBy}
+	</if>
+	<if test="updateDate != null">
+		AND imUsers.update_date = #{updateDate}
+	</if>
+  	</select>
+  
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="com.jtgl.im.model.ImUsers" resultMap="BaseResultMap">
+    	select <include refid="Base_Column_List" />
+    		from im_t_users imUsers
+    	where 1=1 and deleted = 0
+    	<if test="name != null">
+        AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from im_t_users where id = #{id, jdbcType=INTEGER}
+  	</delete>
+  	<update id="logicalDeleteByPrimaryKey" parameterType="java.lang.Integer">
+	    update im_t_users set deleted = 1 where id = #{id, jdbcType=INTEGER}
+  	</update>
+  
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="com.jtgl.im.model.ImUsers">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into im_t_users (
+				id,
+				code,
+				nick_name,
+				name,
+				password,
+				sex,
+				age,
+				birthday,
+				tele_phone,
+				email,
+				head_img,
+				signa_ture,
+				intro,
+				zodiac,
+				constellation,
+				blood_type,
+				school_tag,
+				vocation,
+				nation,
+				province,
+				city,
+				county,
+				friend_ship_policy,
+				friend_policy_question,
+				friend_policy_answer,
+				friend_policy_password,
+				remark,
+				status,
+				deleted,
+				create_by,
+				create_date,
+				update_by,
+				update_date
+		)
+		values (
+			#{id, jdbcType=BIGINT},
+			#{code, jdbcType=VARCHAR},
+			#{nickName, jdbcType=VARCHAR},
+			#{name, jdbcType=VARCHAR},
+			#{password, jdbcType=VARCHAR},
+			#{sex, jdbcType=VARCHAR},
+			#{age, jdbcType=INTEGER},
+			#{birthday, jdbcType=TIMESTAMP},
+			#{telePhone, jdbcType=VARCHAR},
+			#{email, jdbcType=VARCHAR},
+			#{headImg, jdbcType=VARCHAR},
+			#{signaTure, jdbcType=VARCHAR},
+			#{intro, jdbcType=VARCHAR},
+			#{zodiac, jdbcType=VARCHAR},
+			#{constellation, jdbcType=VARCHAR},
+			#{bloodType, jdbcType=VARCHAR},
+			#{schoolTag, jdbcType=VARCHAR},
+			#{vocation, jdbcType=VARCHAR},
+			#{nation, jdbcType=VARCHAR},
+			#{province, jdbcType=VARCHAR},
+			#{city, jdbcType=VARCHAR},
+			#{county, jdbcType=VARCHAR},
+			#{friendShipPolicy, jdbcType=VARCHAR},
+			#{friendPolicyQuestion, jdbcType=VARCHAR},
+			#{friendPolicyAnswer, jdbcType=VARCHAR},
+			#{friendPolicyPassword, jdbcType=VARCHAR},
+			#{remark, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{deleted, jdbcType=INTEGER},
+			#{createBy, jdbcType=BIGINT},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{updateBy, jdbcType=BIGINT},
+			#{updateDate, jdbcType=TIMESTAMP}
+		)
+  	</insert>
+  	
+  	<insert id="insertSelective" parameterType="com.jtgl.im.model.ImUsers">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into im_t_users
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+					<if test="id != null">id, </if>
+					<if test="code != null">code, </if>
+					<if test="nickName != null">nick_name, </if>
+					<if test="name != null">name, </if>
+					<if test="password != null">password, </if>
+					<if test="sex != null">sex, </if>
+					<if test="age != null">age, </if>
+					<if test="birthday != null">birthday, </if>
+					<if test="telePhone != null">tele_phone, </if>
+					<if test="email != null">email, </if>
+					<if test="headImg != null">head_img, </if>
+					<if test="signaTure != null">signa_ture, </if>
+					<if test="intro != null">intro, </if>
+					<if test="zodiac != null">zodiac, </if>
+					<if test="constellation != null">constellation, </if>
+					<if test="bloodType != null">blood_type, </if>
+					<if test="schoolTag != null">school_tag, </if>
+					<if test="vocation != null">vocation, </if>
+					<if test="nation != null">nation, </if>
+					<if test="province != null">province, </if>
+					<if test="city != null">city, </if>
+					<if test="county != null">county, </if>
+					<if test="friendShipPolicy != null">friend_ship_policy, </if>
+					<if test="friendPolicyQuestion != null">friend_policy_question, </if>
+					<if test="friendPolicyAnswer != null">friend_policy_answer, </if>
+					<if test="friendPolicyPassword != null">friend_policy_password, </if>
+					<if test="remark != null">remark, </if>
+					<if test="status != null">status, </if>
+					<if test="deleted != null">deleted, </if>
+					<if test="createBy != null">create_by, </if>
+					<if test="createDate != null">create_date, </if>
+					<if test="updateBy != null">update_by, </if>
+					<if test="updateDate != null">update_date, </if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+					<if test="id != null">#{id, jdbcType=BIGINT}, </if>
+					<if test="code != null">#{code, jdbcType=VARCHAR}, </if>
+					<if test="nickName != null">#{nickName, jdbcType=VARCHAR}, </if>
+					<if test="name != null">#{name, jdbcType=VARCHAR}, </if>
+					<if test="password != null">#{password, jdbcType=VARCHAR}, </if>
+					<if test="sex != null">#{sex, jdbcType=VARCHAR}, </if>
+					<if test="age != null">#{age, jdbcType=INTEGER}, </if>
+					<if test="birthday != null">#{birthday, jdbcType=TIMESTAMP}, </if>
+					<if test="telePhone != null">#{telePhone, jdbcType=VARCHAR}, </if>
+					<if test="email != null">#{email, jdbcType=VARCHAR}, </if>
+					<if test="headImg != null">#{headImg, jdbcType=VARCHAR}, </if>
+					<if test="signaTure != null">#{signaTure, jdbcType=VARCHAR}, </if>
+					<if test="intro != null">#{intro, jdbcType=VARCHAR}, </if>
+					<if test="zodiac != null">#{zodiac, jdbcType=VARCHAR}, </if>
+					<if test="constellation != null">#{constellation, jdbcType=VARCHAR}, </if>
+					<if test="bloodType != null">#{bloodType, jdbcType=VARCHAR}, </if>
+					<if test="schoolTag != null">#{schoolTag, jdbcType=VARCHAR}, </if>
+					<if test="vocation != null">#{vocation, jdbcType=VARCHAR}, </if>
+					<if test="nation != null">#{nation, jdbcType=VARCHAR}, </if>
+					<if test="province != null">#{province, jdbcType=VARCHAR}, </if>
+					<if test="city != null">#{city, jdbcType=VARCHAR}, </if>
+					<if test="county != null">#{county, jdbcType=VARCHAR}, </if>
+					<if test="friendShipPolicy != null">#{friendShipPolicy, jdbcType=VARCHAR}, </if>
+					<if test="friendPolicyQuestion != null">#{friendPolicyQuestion, jdbcType=VARCHAR}, </if>
+					<if test="friendPolicyAnswer != null">#{friendPolicyAnswer, jdbcType=VARCHAR}, </if>
+					<if test="friendPolicyPassword != null">#{friendPolicyPassword, jdbcType=VARCHAR}, </if>
+					<if test="remark != null">#{remark, jdbcType=VARCHAR}, </if>
+					<if test="status != null">#{status, jdbcType=INTEGER}, </if>
+					<if test="deleted != null">#{deleted, jdbcType=INTEGER}, </if>
+					<if test="createBy != null">#{createBy, jdbcType=BIGINT}, </if>
+					<if test="createDate != null">#{createDate, jdbcType=TIMESTAMP}, </if>
+					<if test="updateBy != null">#{updateBy, jdbcType=BIGINT}, </if>
+					<if test="updateDate != null">#{updateDate, jdbcType=TIMESTAMP}, </if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="com.jtgl.im.model.ImUsers">
+    	update im_t_users
+		<set>
+        	<if test="code != null">code = #{code, jdbcType=VARCHAR}, </if>
+        	<if test="nickName != null">nick_name = #{nickName, jdbcType=VARCHAR}, </if>
+        	<if test="name != null">name = #{name, jdbcType=VARCHAR}, </if>
+        	<if test="password != null and password != ''">password = #{password, jdbcType=VARCHAR}, </if>
+        	<if test="sex != null">sex = #{sex, jdbcType=VARCHAR}, </if>
+        	<if test="age != null">age = #{age, jdbcType=INTEGER}, </if>
+        	<if test="birthday != null">birthday = #{birthday, jdbcType=TIMESTAMP}, </if>
+        	<if test="telePhone != null">tele_phone = #{telePhone, jdbcType=VARCHAR}, </if>
+        	<if test="email != null">email = #{email, jdbcType=VARCHAR}, </if>
+        	<if test="headImg != null">head_img = #{headImg, jdbcType=VARCHAR}, </if>
+        	<if test="signaTure != null">signa_ture = #{signaTure, jdbcType=VARCHAR}, </if>
+        	<if test="intro != null">intro = #{intro, jdbcType=VARCHAR}, </if>
+        	<if test="zodiac != null">zodiac = #{zodiac, jdbcType=VARCHAR}, </if>
+        	<if test="constellation != null">constellation = #{constellation, jdbcType=VARCHAR}, </if>
+        	<if test="bloodType != null">blood_type = #{bloodType, jdbcType=VARCHAR}, </if>
+        	<if test="schoolTag != null">school_tag = #{schoolTag, jdbcType=VARCHAR}, </if>
+        	<if test="vocation != null">vocation = #{vocation, jdbcType=VARCHAR}, </if>
+        	<if test="nation != null">nation = #{nation, jdbcType=VARCHAR}, </if>
+        	<if test="province != null">province = #{province, jdbcType=VARCHAR}, </if>
+        	<if test="city != null">city = #{city, jdbcType=VARCHAR}, </if>
+        	<if test="county != null">county = #{county, jdbcType=VARCHAR}, </if>
+        	<if test="friendShipPolicy != null">friend_ship_policy = #{friendShipPolicy, jdbcType=VARCHAR}, </if>
+        	<if test="friendPolicyQuestion != null">friend_policy_question = #{friendPolicyQuestion, jdbcType=VARCHAR}, </if>
+        	<if test="friendPolicyAnswer != null">friend_policy_answer = #{friendPolicyAnswer, jdbcType=VARCHAR}, </if>
+        	<if test="friendPolicyPassword != null">friend_policy_password = #{friendPolicyPassword, jdbcType=VARCHAR}, </if>
+        	<if test="remark != null">remark = #{remark, jdbcType=VARCHAR}, </if>
+        	<if test="status != null">status = #{status, jdbcType=INTEGER}, </if>
+        	<if test="deleted != null">deleted = #{deleted, jdbcType=INTEGER}, </if>
+        	<if test="createBy != null">create_by = #{createBy, jdbcType=BIGINT}, </if>
+        	<if test="createDate != null">create_date = #{createDate, jdbcType=TIMESTAMP}, </if>
+        	<if test="updateBy != null">update_by = #{updateBy, jdbcType=BIGINT}, </if>
+        	<if test="updateDate != null">update_date = #{updateDate, jdbcType=TIMESTAMP}, </if>
+	    </set>
+    	where id = #{id, jdbcType=INTEGER}
+ 	</update>
+  	<update id="updateByPrimaryKey" parameterType="com.jtgl.im.model.ImUsers">
+    	update im_t_users
+    	<set>
+    
+    code = #{code, jdbcType=VARCHAR},
+    nick_name = #{nickName, jdbcType=VARCHAR},
+    name = #{name, jdbcType=VARCHAR},
+    password = #{password, jdbcType=VARCHAR},
+    sex = #{sex, jdbcType=VARCHAR},
+    age = #{age, jdbcType=INTEGER},
+    birthday = #{birthday, jdbcType=TIMESTAMP},
+    tele_phone = #{telePhone, jdbcType=VARCHAR},
+    email = #{email, jdbcType=VARCHAR},
+    head_img = #{headImg, jdbcType=VARCHAR},
+    signa_ture = #{signaTure, jdbcType=VARCHAR},
+    intro = #{intro, jdbcType=VARCHAR},
+    zodiac = #{zodiac, jdbcType=VARCHAR},
+    constellation = #{constellation, jdbcType=VARCHAR},
+    blood_type = #{bloodType, jdbcType=VARCHAR},
+    school_tag = #{schoolTag, jdbcType=VARCHAR},
+    vocation = #{vocation, jdbcType=VARCHAR},
+    nation = #{nation, jdbcType=VARCHAR},
+    province = #{province, jdbcType=VARCHAR},
+    city = #{city, jdbcType=VARCHAR},
+    county = #{county, jdbcType=VARCHAR},
+    friend_ship_policy = #{friendShipPolicy, jdbcType=VARCHAR},
+    friend_policy_question = #{friendPolicyQuestion, jdbcType=VARCHAR},
+    friend_policy_answer = #{friendPolicyAnswer, jdbcType=VARCHAR},
+    friend_policy_password = #{friendPolicyPassword, jdbcType=VARCHAR},
+    remark = #{remark, jdbcType=VARCHAR},
+    status = #{status, jdbcType=INTEGER},
+    deleted = #{deleted, jdbcType=INTEGER},
+    create_by = #{createBy, jdbcType=BIGINT},
+    create_date = #{createDate, jdbcType=TIMESTAMP},
+    update_by = #{updateBy, jdbcType=BIGINT},
+    update_date = #{updateDate, jdbcType=TIMESTAMP}
+		</set>
+    	where id = #{id, jdbcType=INTEGER}
+  </update>
+
+</mapper>

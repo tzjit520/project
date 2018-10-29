@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	
+	<description>任务调度配置</description>
+
+	<!-- 配置scheduler工厂 -->    
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<!-- 在SchedulerFactoryBean初始化完成自动启动Scheduler -->
+		<property name="autoStartup" value="true"></property>
+		<!-- 在SchedulerFactoryBean初始化完成后延迟20秒启动Scheduler  -->
+		<property name="startupDelay" value="30"></property>
+		<property name="quartzProperties">
+			<props>
+				<!-- 主要是这个参数 -->
+				<prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
+			</props>
+		</property>
+	</bean>  
+
+</beans>

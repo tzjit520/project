@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	
+	<description>Spring Mybatis Configuration</description>
+	
+	<!-- default数据源配置  使用druid连接池 -->
+	<bean id="default" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.mysql.driver}" />
+		<property name="url" value="${jdbc.mysql.url}" />
+		<property name="username" value="${jdbc.mysql.username}" />
+		<property name="password" value="${jdbc.mysql.password}" />
+		<property name="initialSize" value="${initialSize}" />
+		<property name="minIdle" value="${minIdle}" />
+		<property name="maxActive" value="${maxActive}" />
+		<property name="maxWait" value="${maxWait}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testWhileIdle" value="${testWhileIdle}" />
+		<property name="testOnBorrow" value="${testOnBorrow}" />
+		<property name="testOnReturn" value="${testOnReturn}" />
+		<property name="poolPreparedStatements" value="${poolPreparedStatements}" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="${maxPoolPreparedStatementPerConnectionSize}" />
+		<property name="filters" value="${filters}" />
+		<property name="useGlobalDataSourceStat" value="${useGlobalDataSourceStat}" />
+	</bean>
+	
+	<!-- mysql数据源配置    使用druid连接池 -->
+	<bean id="mysql" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.mysql.driver1}" />
+		<property name="url" value="${jdbc.mysql.url1}" />
+		<property name="username" value="${jdbc.mysql.username1}" />
+		<property name="password" value="${jdbc.mysql.password1}" />
+		<property name="initialSize" value="${initialSize}" />
+		<property name="minIdle" value="${minIdle}" />
+		<property name="maxActive" value="${maxActive}" />
+		<property name="maxWait" value="${maxWait}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testWhileIdle" value="${testWhileIdle}" />
+		<property name="testOnBorrow" value="${testOnBorrow}" />
+		<property name="testOnReturn" value="${testOnReturn}" />
+		<property name="poolPreparedStatements" value="${poolPreparedStatements}" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="${maxPoolPreparedStatementPerConnectionSize}" />
+		<property name="filters" value="${filters}" />
+		<property name="useGlobalDataSourceStat" value="${useGlobalDataSourceStat}" />
+	</bean>
+
+	<!-- 动态配置数据源 --> 
+	<bean id="dynamicDataSource" class="com.platform.dynamic.DynamicDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="default" value-ref="default"></entry>
+				<entry key="mysql" value-ref="mysql"></entry>
+			</map>
+		</property>
+		<property name ="defaultTargetDataSource" ref="default"></property ><!-- 默认使用default的数据源   -->
+	</bean>
+	
+	<!-- <bean id="vendorProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="MySQL">mysql</prop>
+                <prop key="Oracle">oracle</prop>
+            </props>
+        </property>
+    </bean>
+ 
+    <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+        <property name="properties" ref="vendorProperties" />
+    </bean> -->
+    
+	<!-- 2. 创建SqlSessionFactory -->  
+	<bean id ="sqlSessionFactory" class= "org.mybatis.spring.SqlSessionFactoryBean" >  
+    	<!-- 指定数据源 -->  
+        <property name ="dataSource" ref="dynamicDataSource" />  
+        <!-- <property name ="databaseIdProvider" ref="databaseIdProvider" />   -->
+        <!-- 指定mybatis 的配置文件 -->  
+        <property name ="configLocation" value= "classpath:mybatis-config.xml" />
+        <!-- 当mybatis的xml文件和mapper接口不在相同包下时，需要用mapperLocations属性指定xml文件的路径 -->   
+        <!-- *是个通配符，代表所有的文件，**代表所有目录下 --> 
+        <property name="mapperLocations" value="classpath:mappings/**/*.xml"/>
+	</bean> 
+	
+	<!-- 3. 自动扫描加载Sql映射文件/接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- basePackage:指定sql映射文件/接口所在的包（自动扫描）-->
+        <property name="basePackage" value="com.**.mapper"></property>
+    </bean>
+    
+    <!-- 配置事务 -->  
+    <bean id ="transactionManager" class= "org.springframework.jdbc.datasource.DataSourceTransactionManager" >  
+	    <property name ="dataSource" ref="dynamicDataSource"></property>  
+    </bean>  
+
+    <!-- 配置事务的传播特性 -->  
+    <tx:advice id ="txAdvice" transaction-manager="transactionManager">  
+	    <tx:attributes >  
+	        <tx:method name ="find*" read-only="true" />  
+	        <tx:method name ="get*" read-only="true" />  
+	        <tx:method name ="query*" read-only="true" />  
+	        <tx:method name ="list*" read-only="true" />  
+	        <tx:method name ="count*" read-only="true" />  
+	        <tx:method name ="insert*" propagation="REQUIRED" />  
+	        <tx:method name ="create*" propagation="REQUIRED" />  
+	        <tx:method name ="save*" propagation="REQUIRED" />  
+	        <tx:method name ="add*" propagation="REQUIRED" />  
+	        <tx:method name ="update*" propagation="REQUIRED" />  
+	        <tx:method name ="remove*" propagation="REQUIRED" />  
+	        <tx:method name ="del*" propagation="REQUIRED" />  
+	        <tx:method name ="*" read-only="true" />  
+	    </tx:attributes >  
+    </tx:advice>
+     
+    <!-- 配置AOP -->  
+	<aop:config >  
+	    <aop:pointcut expression ="execution(* com.**.service.*.*(..))" id= "pointcut" />  
+	    <aop:advisor advice-ref ="txAdvice" pointcut-ref="pointcut" />  
+	</aop:config>
+	
+	<!-- 使用annotation注解方式配置事务 -->  
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <!-- jdbcTemplate -->
+	<bean id="masterJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dynamicDataSource" />
+    </bean>
+	
+</beans>

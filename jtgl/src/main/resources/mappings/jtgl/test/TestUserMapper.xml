@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jtgl.test.mapper.TestUserMapper">
+
+	<resultMap id="BaseResultMap" type="TestUser">
+		<id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="age" jdbcType="INTEGER" property="age" />
+        <result column="hobby" jdbcType="VARCHAR" property="hobby" />
+        <result column="attachment" jdbcType="VARCHAR" property="attachment" />
+        <result column="birth_day" jdbcType="DATE" property="birthday" />
+        <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+        <result column="file" jdbcType="VARCHAR" property="file" />
+        <result column="info" jdbcType="VARCHAR" property="info" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+	    <result column="status" jdbcType="INTEGER" property="status" />
+	    <result column="deleted" jdbcType="INTEGER" property="deleted" />
+	    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+	    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+	    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+	    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  	</resultMap>
+  
+  	<sql id="Base_Column_List">			
+		id, name, nick_name, sex, hobby, attachment, age, birth_day, head_img, info, file, remark, status, deleted, create_by, create_date, update_by, update_date
+  	</sql>
+  	
+  	<sql id="Base_Column_List_Alias">			
+		u.id, u.name, u.nick_name, u.sex, u.hobby, u.attachment, u.age, u.birth_day, u.head_img, u.info, u.file, u.remark, u.status, u.deleted, u.create_by, u.create_date, u.update_by, u.update_date
+  	</sql>
+  
+ 	 <!-- 根据主键查询记录 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    	select 
+    		<include refid="Base_Column_List" /> 
+    	from 
+    		test_users
+    	where 
+    		id = #{id, jdbcType=BIGINT}
+  	</select>
+  	
+  	<!-- 
+  		根据条件查询记录
+  		TODO 此处条件将所有属性都作为条件进行了添加，需根据实际情况进行调整	
+  	-->
+  	<select id="selectByProperties" parameterType="TestUser" resultMap="BaseResultMap">
+   		select 
+   			<include refid="Base_Column_List_Alias" />	
+ 		from 
+ 			test_users u
+    	where 
+    		1 = 1 
+			<if test="name != null">
+				AND u.name like CONCAT('%',#{name},'%')
+			</if>
+			<if test="@com.platform.dynamic.DynamicDataSource@getDataBaseType() == 'mysql'">
+				order by u.id asc
+			</if>
+			<if test="@com.platform.dynamic.DynamicDataSource@getDataBaseType() == 'oracle'">
+				order by u.name asc
+			</if>
+  	</select>
+
+  	<!-- 
+  		检查数据唯一性
+  		TODO 此处条件固定写为根据name判断，需根据实际情况进行调整
+  	-->
+  	<select id="selectByUnique" parameterType="TestUser" resultMap="BaseResultMap">
+    	select <include refid="Base_Column_List" />
+    		from test_users
+    	where 1 = 1 
+    	<if test="name != null">
+        	AND name = #{name}
+    	</if>
+  	</select>
+  	
+  	<!-- 查询最大编号 -->
+  	<select id="selectMaxNumber" resultType="java.lang.String">
+    	select max(id) as number from test_users
+  	</select>
+  	
+  	<!-- 删除数据，物理删除和逻辑删除  -->
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from test_users where id = #{id, jdbcType=BIGINT}
+  	</delete>
+ 
+  	<!-- 保存数据  -->
+  	<insert id="insert" parameterType="TestUser">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into test_users (
+			id, name, nick_name, sex, hobby, attachment, age, birth_day, head_img, info, remark, 
+			status, deleted, create_by, create_date, update_by, update_date
+		)
+		values (
+			#{id, jdbcType=INTEGER}, #{name, jdbcType=VARCHAR}, #{nickName, jdbcType=VARCHAR}, 
+			#{sex, jdbcType=VARCHAR}, #{hobby, jdbcType=VARCHAR}, #{attachment, jdbcType=VARCHAR}, 
+			#{age, jdbcType=INTEGER}, #{birthday, jdbcType=TIMESTAMP}, #{headImg, jdbcType=VARCHAR},
+			#{info, jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+			#{deleted,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+			#{updateBy,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}
+		)
+  	</insert>
+
+  	<insert id="insertSelective" parameterType="TestUser">
+  		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	insert into test_users
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="nickName != null">
+				nick_name,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="hobby != null">
+				hobby,
+			</if>
+			<if test="attachment != null">
+				attachment,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="birthday != null">
+				birth_day,
+			</if>
+			<if test="headImg != null">
+				head_img,
+			</if>
+			<if test="info != null">
+				info,
+			</if>
+			<if test="remark != null">
+	        	remark,
+	      	</if>
+			<if test="status != null">
+        		status,
+	      	</if>
+	      	<if test="deleted != null">
+	        	deleted,
+	      	</if>
+	      	<if test="createBy != null">
+	        	create_by,
+	      	</if>
+	      	<if test="createDate != null">
+	        	create_date,
+	      	</if>
+	      	<if test="updateBy != null">
+	        	update_by,
+	      	</if>
+	      	<if test="updateDate != null">
+	        	update_date,
+	      	</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id, jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name, jdbcType=VARCHAR},
+			</if>
+			<if test="nickName != null">
+				#{nickName, jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex, jdbcType=VARCHAR},
+			</if>
+			<if test="hobby != null">
+				#{hobby, jdbcType=VARCHAR},
+			</if>
+			<if test="attachment != null">
+				#{attachment, jdbcType=VARCHAR},
+			</if>
+			<if test="age != null">
+				#{age, jdbcType=INTEGER},
+			</if>
+			<if test="birthday != null">
+				#{birthday, jdbcType=TIMESTAMP},
+			</if>
+			<if test="headImg != null">
+				#{headImg, jdbcType=VARCHAR},
+			</if>
+			<if test="info != null">
+				#{info, jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+	        	#{remark,jdbcType=VARCHAR},
+	       	</if>
+			<if test="status != null">
+	        	#{status,jdbcType=INTEGER},
+	        </if>
+	       	<if test="deleted != null">
+	        	#{deleted,jdbcType=INTEGER},
+	       	</if>
+	       	<if test="createBy != null">
+	        	#{createBy,jdbcType=INTEGER},
+	       	</if>
+	       	<if test="createDate != null">
+	        	#{createDate,jdbcType=TIMESTAMP},
+	       	</if>
+	       	<if test="updateBy != null">
+	        	#{updateBy,jdbcType=INTEGER},
+	       	</if>
+	       	<if test="updateDate != null">
+	        	#{updateDate,jdbcType=TIMESTAMP},
+	       	</if>
+    	</trim>
+  	</insert>
+  	
+  	<!-- 更新数据  -->
+  	<update id="updateByPrimaryKeySelective" parameterType="TestUser">
+    	update test_users
+		<set>
+        	<if test="name != null">
+        		name = #{name, jdbcType=VARCHAR},
+        	</if>
+        	<if test="nickName != null">
+				nick_name = #{nickName, jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex, jdbcType=VARCHAR},
+			</if>
+			<if test="hobby != null">
+				hobby = #{hobby, jdbcType=VARCHAR},
+			</if>
+			<if test="attachment != null">
+				attachment = #{attachment, jdbcType=VARCHAR},
+			</if>
+        	<if test="age != null">
+        		age = #{age, jdbcType=INTEGER},
+        	</if>
+        	<if test="birthday != null">
+        		birth_day = #{birthday, jdbcType=TIMESTAMP},
+        	</if>
+        	<if test="headImg != null">
+        		head_img = #{headImg, jdbcType=VARCHAR},
+        	</if>
+        	<if test="info != null">
+        		info = #{info, jdbcType=VARCHAR}, 
+        	</if>
+        	<if test="remark != null">
+	        	remark = #{remark,jdbcType=VARCHAR},
+	      	</if>
+        	<if test="status != null">
+	        	status = #{status,jdbcType=INTEGER},
+	       	</if>
+	      	<if test="deleted != null">
+	        	deleted = #{deleted,jdbcType=INTEGER},
+	      	</if>
+	      	<if test="createBy != null">
+	        	create_by = #{createBy,jdbcType=INTEGER},
+	      	</if>
+	      	<if test="createDate != null">
+	        	create_date = #{createDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="updateBy != null">
+	        	update_by = #{updateBy,jdbcType=INTEGER},
+	      	</if>
+	      	<if test="updateDate != null">
+	        	update_date = #{updateDate,jdbcType=TIMESTAMP},
+	      	</if>
+	    </set>
+    	where id = #{id, jdbcType=BIGINT}
+ 	</update>
+ 	
+  	<update id="updateByPrimaryKey" parameterType="TestUser">
+    	update test_users
+    	<set>
+		    name = #{name, jdbcType=VARCHAR},
+		    nick_name = #{nickName, jdbcType=VARCHAR},
+			sex = #{sex, jdbcType=VARCHAR},
+			hobby = #{hobby, jdbcType=VARCHAR},
+			attachment = #{attachment, jdbcType=VARCHAR},
+		    age = #{age, jdbcType=INTEGER},
+		    birth_day = #{birthday, jdbcType=TIMESTAMP},
+		    head_img = #{headImg, jdbcType=VARCHAR}, 
+		    info = #{info, jdbcType=VARCHAR},
+	      	remark = #{remark,jdbcType=VARCHAR},
+		    status = #{status,jdbcType=INTEGER},
+	      	deleted = #{deleted,jdbcType=INTEGER},
+	      	create_by = #{createBy,jdbcType=INTEGER},
+	      	create_date = #{createDate,jdbcType=TIMESTAMP},
+	      	update_by = #{updateBy,jdbcType=INTEGER},
+	      	update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</set>
+    	where id = #{id, jdbcType=BIGINT}
+  </update>
+
+</mapper>
